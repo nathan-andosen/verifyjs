@@ -10,14 +10,18 @@ export class Verify {
   isNotDefined() {}
   isSet() {} // parameter is not equal to undefined or null
   isSetOrThrowError(err?: any) {}
+  isSetOrUseDefault() {} // myParam = verify(myParam).isSetOrUseDefault(10); // returns the parameter if set, or the default value
   isNotSet() {}
 
+
+  // only the valid functions can be used with the chainable functions
   isValid() {}
   isNotValid() {}
   isValidOrThrowError(err?: any) {} // err can be string or Error or custom error
 
 
-  // validate functions will return the verify instance object
+
+  // validate functions will return the verify instance object so it can be chained
 
   string() {}
   array() {}
