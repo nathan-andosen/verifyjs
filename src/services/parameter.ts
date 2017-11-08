@@ -102,4 +102,64 @@ export class Parameter {
     if(!this.isSet(param)) { return false; }
     return (Array.isArray(param));
   }
+
+
+  /**
+   * Determine if a parameter is a string
+   * 
+   * @param {*} param 
+   * @returns {boolean} 
+   * @memberof Parameter
+   */
+  isString(param: any): boolean {
+    if(!this.isSet(param)) { return false; }
+    return (typeof param === 'string' || param instanceof String);
+  }
+
+
+  /**
+   * Determine if a parameter is a number. This includes strings that contain
+   * numbers, example: '10' but not '10 abc'
+   * 
+   * TODO: add param that allows you to disable the numbers as a string
+   * 
+   * @param {*} param 
+   * @returns {boolean} 
+   * @memberof Parameter
+   */
+  isNumber(param: any): boolean {
+    if(!this.isSet(param)) { return false; }
+    return (!(isNaN(parseFloat(param)) || !isFinite(param)));
+  }
+
+
+  /**
+   * Determine if a parameter is an integer, this includes strings that contain
+   * integers, example: '10' but not '10 abc'
+   * 
+   * TODO: add param that allows you to disable the integers as a string
+   * 
+   * @param {*} param 
+   * @returns {boolean} 
+   * @memberof Parameter
+   */
+  isInt(param: any): boolean {
+    if(!this.isSet(param)) { return false; }
+    let x = parseFloat(param);
+    return (!(isNaN(param) || !((x | 0) === x)));
+  }
+
+
+  /**
+   * Determine if a parameter is a valid email address
+   * 
+   * @param {*} param 
+   * @returns {boolean} 
+   * @memberof Parameter
+   */
+  isEmail(param: any): boolean {
+    if(!this.isSet(param)) { return false; }
+    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return (re.test(param));
+  }
 }

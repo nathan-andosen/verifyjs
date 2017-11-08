@@ -59,6 +59,32 @@ var Parameter = (function () {
         }
         return (Array.isArray(param));
     };
+    Parameter.prototype.isString = function (param) {
+        if (!this.isSet(param)) {
+            return false;
+        }
+        return (typeof param === 'string' || param instanceof String);
+    };
+    Parameter.prototype.isNumber = function (param) {
+        if (!this.isSet(param)) {
+            return false;
+        }
+        return (!(isNaN(parseFloat(param)) || !isFinite(param)));
+    };
+    Parameter.prototype.isInt = function (param) {
+        if (!this.isSet(param)) {
+            return false;
+        }
+        var x = parseFloat(param);
+        return (!(isNaN(param) || !((x | 0) === x)));
+    };
+    Parameter.prototype.isEmail = function (param) {
+        if (!this.isSet(param)) {
+            return false;
+        }
+        var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        return (re.test(param));
+    };
     return Parameter;
 }());
 exports.Parameter = Parameter;

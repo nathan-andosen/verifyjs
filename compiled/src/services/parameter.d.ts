@@ -14,4 +14,8 @@ export declare class Parameter {
     isSet(param: any): boolean;
     isJson(param: any): boolean;
     isArray(param: any): boolean;
+    isString(param: any): boolean;
+    isNumber(param: any): boolean;
+    isInt(param: any): boolean;
+    isEmail(param: any): boolean;
 }

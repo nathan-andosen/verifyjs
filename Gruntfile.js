@@ -1,3 +1,6 @@
+var isWindows = (process.platform === "win32");
+var bashCmd = (isWindows) ? 'bash ' : '';
+
 module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-exec');
@@ -7,7 +10,7 @@ module.exports = function(grunt) {
   // execute bash commands
   init.exec = {
     tsc : {
-      cmd : 'bash ./node_modules/.bin/tsc'
+      cmd : bashCmd + './node_modules/.bin/tsc'
     },
     compileBrowserTests : {
       cmd : 'bash ./scripts/browser-compile-unit-tests.sh'
