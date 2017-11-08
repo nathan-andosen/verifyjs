@@ -1,8 +1,30 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+var dependency_manager_1 = require("./services/dependency-manager");
+var parameter_service_1 = require("./services/parameter.service");
 var VerifyParam = (function () {
-    function VerifyParam() {
+    function VerifyParam(parameter, parameterName) {
+        this.paramSet = null;
+        this.validationErrorMsg = null;
+        this.parameterSrv = dependency_manager_1.dependencyManager.get(parameter_service_1.ParameterService);
+        this.param = parameter;
+        this.paramName = (parameterName) ? parameterName : '';
     }
+    VerifyParam.prototype.paramIsSet = function () {
+        if (this.paramSet !== null) {
+            return this.paramSet;
+        }
+        if (this.parameterSrv.isSet(this.param)) {
+            this.paramSet = true;
+            return true;
+        }
+        this.paramSet = false;
+        this.setError('Parameter ' + this.paramName + ' is not set');
+        return false;
+    };
+    VerifyParam.prototype.setError = function (msg) {
+        this.validationErrorMsg = msg;
+    };
     VerifyParam.prototype.isDefined = function () { };
     VerifyParam.prototype.isDefinedOrThrowError = function (err) { };
     VerifyParam.prototype.isNotDefined = function () { };
@@ -10,12 +32,21 @@ var VerifyParam = (function () {
     VerifyParam.prototype.isSetOrThrowError = function (err) { };
     VerifyParam.prototype.isSetOrUseDefault = function () { };
     VerifyParam.prototype.isNotSet = function () { };
+    VerifyParam.prototype.isTruthy = function () { };
+    VerifyParam.prototype.isFalsey = function () { };
     VerifyParam.prototype.isValid = function () { };
     VerifyParam.prototype.isNotValid = function () { };
     VerifyParam.prototype.isValidOrThrowError = function (err) { };
     VerifyParam.prototype.string = function () { };
     VerifyParam.prototype.array = function () { };
-    VerifyParam.prototype.number = function () { };
+    VerifyParam.prototype.number = function (allowNumbersAsStrings) {
+        if (allowNumbersAsStrings === void 0) { allowNumbersAsStrings = false; }
+        if (this.paramIsSet()
+            && !this.parameterSrv.isNumber(this.param, allowNumbersAsStrings)) {
+            this.setError('Parameter ' + this.paramName + ' is not a number');
+        }
+        return this;
+    };
     VerifyParam.prototype.int = function () { };
     VerifyParam.prototype.json = function () { };
     VerifyParam.prototype.min = function () { };

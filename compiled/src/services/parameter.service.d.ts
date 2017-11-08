@@ -10,6 +10,7 @@ export declare enum ParameterDataType {
 }
 export declare class ParameterService {
     getDataType(param: any): ParameterDataType;
+    getDataTypeAsString(param: any): string;
     isDefined(param: any): boolean;
     isSet(param: any): boolean;
     isJson(param: any): boolean;

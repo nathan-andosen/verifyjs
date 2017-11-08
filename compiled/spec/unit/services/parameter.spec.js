@@ -1,178 +1,207 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var parameter_1 = require("../../../src/services/parameter");
+var parameter_service_1 = require("../../../src/services/parameter.service");
 describe('Parameter', function () {
     describe('getDataType()', function () {
         it('should return the correct data type', function () {
-            var parameter = new parameter_1.Parameter();
-            expect(parameter.getDataType(undefined))
-                .toEqual(parameter_1.ParameterDataType.Undefined);
-            expect(parameter.getDataType(null)).toEqual(parameter_1.ParameterDataType.Null);
-            expect(parameter.getDataType(10)).toEqual(parameter_1.ParameterDataType.Number);
-            expect(parameter.getDataType(1.6)).toEqual(parameter_1.ParameterDataType.Number);
-            expect(parameter.getDataType("")).toEqual(parameter_1.ParameterDataType.String);
-            expect(parameter.getDataType("hi")).toEqual(parameter_1.ParameterDataType.String);
-            expect(parameter.getDataType('10')).toEqual(parameter_1.ParameterDataType.String);
-            expect(parameter.getDataType(true)).toEqual(parameter_1.ParameterDataType.Boolean);
-            expect(parameter.getDataType(false)).toEqual(parameter_1.ParameterDataType.Boolean);
-            expect(parameter.getDataType([])).toEqual(parameter_1.ParameterDataType.Array);
-            expect(parameter.getDataType([1, 2])).toEqual(parameter_1.ParameterDataType.Array);
-            expect(parameter.getDataType([null])).toEqual(parameter_1.ParameterDataType.Array);
-            expect(parameter.getDataType(new Array()))
-                .toEqual(parameter_1.ParameterDataType.Array);
+            var parameterSrv = new parameter_service_1.ParameterService();
+            expect(parameterSrv.getDataType(undefined))
+                .toEqual(parameter_service_1.ParameterDataType.Undefined);
+            expect(parameterSrv.getDataType(null)).toEqual(parameter_service_1.ParameterDataType.Null);
+            expect(parameterSrv.getDataType(10)).toEqual(parameter_service_1.ParameterDataType.Number);
+            expect(parameterSrv.getDataType(1.6)).toEqual(parameter_service_1.ParameterDataType.Number);
+            expect(parameterSrv.getDataType("")).toEqual(parameter_service_1.ParameterDataType.String);
+            expect(parameterSrv.getDataType("hi")).toEqual(parameter_service_1.ParameterDataType.String);
+            expect(parameterSrv.getDataType('10')).toEqual(parameter_service_1.ParameterDataType.String);
+            expect(parameterSrv.getDataType(true)).toEqual(parameter_service_1.ParameterDataType.Boolean);
+            expect(parameterSrv.getDataType(false)).toEqual(parameter_service_1.ParameterDataType.Boolean);
+            expect(parameterSrv.getDataType([])).toEqual(parameter_service_1.ParameterDataType.Array);
+            expect(parameterSrv.getDataType([1, 2])).toEqual(parameter_service_1.ParameterDataType.Array);
+            expect(parameterSrv.getDataType([null])).toEqual(parameter_service_1.ParameterDataType.Array);
+            expect(parameterSrv.getDataType(new Array()))
+                .toEqual(parameter_service_1.ParameterDataType.Array);
             var obj = { test: 123 };
-            expect(parameter.getDataType(obj)).toEqual(parameter_1.ParameterDataType.Json);
+            expect(parameterSrv.getDataType(obj)).toEqual(parameter_service_1.ParameterDataType.Json);
             obj = JSON.parse(JSON.stringify(obj));
-            expect(parameter.getDataType(obj)).toEqual(parameter_1.ParameterDataType.Json);
+            expect(parameterSrv.getDataType(obj)).toEqual(parameter_service_1.ParameterDataType.Json);
             var unknown = new function () { };
-            expect(parameter.getDataType(unknown)).toEqual(parameter_1.ParameterDataType.Unknown);
+            expect(parameterSrv.getDataType(unknown)).toEqual(parameter_service_1.ParameterDataType.Unknown);
+        });
+    });
+    describe('getDataTypeAsString()', function () {
+        it('should return correct data type as a string', function () {
+            var parameterSrv = new parameter_service_1.ParameterService();
+            expect(parameterSrv.getDataTypeAsString(undefined)).toEqual('undefined');
+            expect(parameterSrv.getDataTypeAsString(null)).toEqual('null');
+            expect(parameterSrv.getDataTypeAsString(10)).toEqual('number');
+            expect(parameterSrv.getDataTypeAsString("hi")).toEqual('string');
+            expect(parameterSrv.getDataTypeAsString(true)).toEqual('boolean');
+            expect(parameterSrv.getDataTypeAsString([1])).toEqual('array');
+            expect(parameterSrv.getDataTypeAsString({ "test": 1 })).toEqual('json');
+            expect(parameterSrv.getDataTypeAsString(new function () { }))
+                .toEqual('unknown');
         });
     });
     describe('isDefined()', function () {
         it('should return true', function () {
-            var parameter = new parameter_1.Parameter();
-            expect(parameter.isDefined(null)).toEqual(true);
-            expect(parameter.isDefined([null])).toEqual(true);
-            expect(parameter.isDefined(new Array())).toEqual(true);
+            var parameterSrv = new parameter_service_1.ParameterService();
+            expect(parameterSrv.isDefined(null)).toEqual(true);
+            expect(parameterSrv.isDefined([null])).toEqual(true);
+            expect(parameterSrv.isDefined(new Array())).toEqual(true);
         });
         it('should return false', function () {
-            var parameter = new parameter_1.Parameter();
-            expect(parameter.isDefined(undefined)).toEqual(false);
+            var parameterSrv = new parameter_service_1.ParameterService();
+            expect(parameterSrv.isDefined(undefined)).toEqual(false);
         });
     });
     describe('isSet()', function () {
         it('should return true', function () {
-            var parameter = new parameter_1.Parameter();
-            expect(parameter.isSet(false)).toEqual(true);
-            expect(parameter.isSet(0)).toEqual(true);
-            expect(parameter.isSet("")).toEqual(true);
-            expect(parameter.isSet([])).toEqual(true);
-            expect(parameter.isSet({})).toEqual(true);
-            expect(parameter.isSet(true)).toEqual(true);
+            var parameterSrv = new parameter_service_1.ParameterService();
+            expect(parameterSrv.isSet(false)).toEqual(true);
+            expect(parameterSrv.isSet(0)).toEqual(true);
+            expect(parameterSrv.isSet("")).toEqual(true);
+            expect(parameterSrv.isSet([])).toEqual(true);
+            expect(parameterSrv.isSet({})).toEqual(true);
+            expect(parameterSrv.isSet(true)).toEqual(true);
         });
         it('should return false', function () {
-            var parameter = new parameter_1.Parameter();
-            expect(parameter.isSet(undefined)).toEqual(false);
-            expect(parameter.isSet(null)).toEqual(false);
+            var parameterSrv = new parameter_service_1.ParameterService();
+            expect(parameterSrv.isSet(undefined)).toEqual(false);
+            expect(parameterSrv.isSet(null)).toEqual(false);
         });
     });
     describe('isJson()', function () {
         it('should return true', function () {
-            var parameter = new parameter_1.Parameter();
-            expect(parameter.isJson({})).toEqual(true);
-            expect(parameter.isJson({ "abc": true })).toEqual(true);
+            var parameterSrv = new parameter_service_1.ParameterService();
+            expect(parameterSrv.isJson({})).toEqual(true);
+            expect(parameterSrv.isJson({ "abc": true })).toEqual(true);
         });
         it('should return false', function () {
-            var parameter = new parameter_1.Parameter();
-            expect(parameter.isJson("{}")).toEqual(false);
-            expect(parameter.isJson(null)).toEqual(false);
-            expect(parameter.isJson(new function () { })).toEqual(false);
-            expect(parameter.isJson(10)).toEqual(false);
-            expect(parameter.isJson([])).toEqual(false);
+            var parameterSrv = new parameter_service_1.ParameterService();
+            expect(parameterSrv.isJson("{}")).toEqual(false);
+            expect(parameterSrv.isJson(null)).toEqual(false);
+            expect(parameterSrv.isJson(new function () { })).toEqual(false);
+            expect(parameterSrv.isJson(10)).toEqual(false);
+            expect(parameterSrv.isJson([])).toEqual(false);
         });
     });
     describe('isArray()', function () {
         it('should return true', function () {
-            var parameter = new parameter_1.Parameter();
-            expect(parameter.isArray([])).toEqual(true);
-            expect(parameter.isArray([null])).toEqual(true);
-            expect(parameter.isArray(new Array())).toEqual(true);
+            var parameterSrv = new parameter_service_1.ParameterService();
+            expect(parameterSrv.isArray([])).toEqual(true);
+            expect(parameterSrv.isArray([null])).toEqual(true);
+            expect(parameterSrv.isArray(new Array())).toEqual(true);
         });
         it('should return false', function () {
-            var parameter = new parameter_1.Parameter();
-            expect(parameter.isArray({})).toEqual(false);
-            expect(parameter.isArray(null)).toEqual(false);
-            expect(parameter.isArray("[]")).toEqual(false);
+            var parameterSrv = new parameter_service_1.ParameterService();
+            expect(parameterSrv.isArray({})).toEqual(false);
+            expect(parameterSrv.isArray(null)).toEqual(false);
+            expect(parameterSrv.isArray("[]")).toEqual(false);
         });
     });
     describe('isString()', function () {
         it('should return true', function () {
-            var parameter = new parameter_1.Parameter();
-            expect(parameter.isString('')).toEqual(true);
-            expect(parameter.isString("")).toEqual(true);
-            expect(parameter.isString(new String())).toEqual(true);
-            expect(parameter.isString("false")).toEqual(true);
+            var parameterSrv = new parameter_service_1.ParameterService();
+            expect(parameterSrv.isString('')).toEqual(true);
+            expect(parameterSrv.isString("")).toEqual(true);
+            expect(parameterSrv.isString(new String())).toEqual(true);
+            expect(parameterSrv.isString("false")).toEqual(true);
         });
         it('should return false', function () {
-            var parameter = new parameter_1.Parameter();
-            expect(parameter.isString({})).toEqual(false);
-            expect(parameter.isString(null)).toEqual(false);
-            expect(parameter.isString([""])).toEqual(false);
+            var parameterSrv = new parameter_service_1.ParameterService();
+            expect(parameterSrv.isString({})).toEqual(false);
+            expect(parameterSrv.isString(null)).toEqual(false);
+            expect(parameterSrv.isString([""])).toEqual(false);
         });
     });
     describe('isNumber()', function () {
         it('should return true', function () {
-            var parameter = new parameter_1.Parameter();
-            expect(parameter.isNumber(0)).toEqual(true);
-            expect(parameter.isNumber(-1)).toEqual(true);
-            expect(parameter.isNumber(-1.5)).toEqual(true);
-            expect(parameter.isNumber(0.42)).toEqual(true);
-            expect(parameter.isNumber(.42)).toEqual(true);
-            expect(parameter.isNumber(8e5)).toEqual(true);
-            expect(parameter.isNumber(5)).toEqual(true);
-            expect(parameter.isNumber('10')).toEqual(true);
-            expect(parameter.isNumber(' 10 ')).toEqual(true);
-            expect(parameter.isNumber('.42')).toEqual(true);
+            var parameterSrv = new parameter_service_1.ParameterService();
+            expect(parameterSrv.isNumber(0)).toEqual(true);
+            expect(parameterSrv.isNumber(-1)).toEqual(true);
+            expect(parameterSrv.isNumber(-1.5)).toEqual(true);
+            expect(parameterSrv.isNumber(0.42)).toEqual(true);
+            expect(parameterSrv.isNumber(.42)).toEqual(true);
+            expect(parameterSrv.isNumber(8e5)).toEqual(true);
+            expect(parameterSrv.isNumber(5)).toEqual(true);
+            expect(parameterSrv.isNumber('10', true)).toEqual(true);
+            expect(parameterSrv.isNumber(' 10 ', true)).toEqual(true);
+            expect(parameterSrv.isNumber('.42', true)).toEqual(true);
         });
         it('should return false', function () {
-            var parameter = new parameter_1.Parameter();
-            expect(parameter.isNumber(undefined)).toEqual(false);
-            expect(parameter.isNumber(null)).toEqual(false);
-            expect(parameter.isNumber(true)).toEqual(false);
-            expect(parameter.isNumber('0test')).toEqual(false);
-            expect(parameter.isNumber('#abc')).toEqual(false);
-            expect(parameter.isNumber('1.2.3')).toEqual(false);
-            expect(parameter.isNumber('')).toEqual(false);
-            expect(parameter.isNumber('ten')).toEqual(false);
+            var parameterSrv = new parameter_service_1.ParameterService();
+            expect(parameterSrv.isNumber(undefined)).toEqual(false);
+            expect(parameterSrv.isNumber(null)).toEqual(false);
+            expect(parameterSrv.isNumber(true)).toEqual(false);
+            expect(parameterSrv.isNumber([1])).toEqual(false);
+            expect(parameterSrv.isNumber('0test')).toEqual(false);
+            expect(parameterSrv.isNumber('#abc')).toEqual(false);
+            expect(parameterSrv.isNumber('1.2.3')).toEqual(false);
+            expect(parameterSrv.isNumber('')).toEqual(false);
+            expect(parameterSrv.isNumber('ten')).toEqual(false);
         });
     });
     describe('isInt()', function () {
         it('should return true', function () {
-            var parameter = new parameter_1.Parameter();
-            expect(parameter.isInt(0)).toEqual(true);
-            expect(parameter.isInt(-1)).toEqual(true);
-            expect(parameter.isInt(8e5)).toEqual(true);
-            expect(parameter.isInt(5)).toEqual(true);
-            expect(parameter.isInt('10')).toEqual(true);
-            expect(parameter.isInt(' 10 ')).toEqual(true);
-            expect(parameter.isInt('8e5')).toEqual(true);
+            var parameterSrv = new parameter_service_1.ParameterService();
+            expect(parameterSrv.isInt(0)).toEqual(true);
+            expect(parameterSrv.isInt(-1)).toEqual(true);
+            expect(parameterSrv.isInt(8e5)).toEqual(true);
+            expect(parameterSrv.isInt(5)).toEqual(true);
+            expect(parameterSrv.isInt('10', true)).toEqual(true);
+            expect(parameterSrv.isInt(' 10 ', true)).toEqual(true);
+            expect(parameterSrv.isInt('8e5', true)).toEqual(true);
         });
         it('should return false', function () {
-            var parameter = new parameter_1.Parameter();
-            expect(parameter.isInt(undefined)).toEqual(false);
-            expect(parameter.isInt(null)).toEqual(false);
-            expect(parameter.isInt(true)).toEqual(false);
-            expect(parameter.isInt('0test')).toEqual(false);
-            expect(parameter.isInt('#abc')).toEqual(false);
-            expect(parameter.isInt('1.2.3')).toEqual(false);
-            expect(parameter.isInt('')).toEqual(false);
-            expect(parameter.isInt('42.1')).toEqual(false);
-            expect(parameter.isInt(1.2)).toEqual(false);
+            var parameterSrv = new parameter_service_1.ParameterService();
+            expect(parameterSrv.isInt(undefined)).toEqual(false);
+            expect(parameterSrv.isInt(null)).toEqual(false);
+            expect(parameterSrv.isInt(true)).toEqual(false);
+            expect(parameterSrv.isInt('0test')).toEqual(false);
+            expect(parameterSrv.isInt('#abc')).toEqual(false);
+            expect(parameterSrv.isInt('1.2.3')).toEqual(false);
+            expect(parameterSrv.isInt('')).toEqual(false);
+            expect(parameterSrv.isInt('42.1')).toEqual(false);
+            expect(parameterSrv.isInt(1.2)).toEqual(false);
         });
     });
     describe('isEmail()', function () {
         it('should return true', function () {
-            var parameter = new parameter_1.Parameter();
-            expect(parameter.isEmail('test@email.com')).toEqual(true);
-            expect(parameter.isEmail('test.test@email.com')).toEqual(true);
-            expect(parameter.isEmail('123@email.org')).toEqual(true);
-            expect(parameter.isEmail('test@123.org')).toEqual(true);
-            expect(parameter.isEmail('test@test-test.org')).toEqual(true);
-            expect(parameter.isEmail('!#$%&`*+/=?^`{|}~@test.org')).toEqual(true);
-            expect(parameter.isEmail('test@email.com.au')).toEqual(true);
+            var parameterSrv = new parameter_service_1.ParameterService();
+            expect(parameterSrv.isEmail('test@email.com')).toEqual(true);
+            expect(parameterSrv.isEmail('test.test@email.com')).toEqual(true);
+            expect(parameterSrv.isEmail('123@email.org')).toEqual(true);
+            expect(parameterSrv.isEmail('test@123.org')).toEqual(true);
+            expect(parameterSrv.isEmail('test@test-test.org')).toEqual(true);
+            expect(parameterSrv.isEmail('!#$%&`*+/=?^`{|}~@test.org')).toEqual(true);
+            expect(parameterSrv.isEmail('test@email.com.au')).toEqual(true);
         });
         it('should return false', function () {
-            var parameter = new parameter_1.Parameter();
-            expect(parameter.isEmail(undefined)).toEqual(false);
-            expect(parameter.isEmail(null)).toEqual(false);
-            expect(parameter.isEmail(true)).toEqual(false);
-            expect(parameter.isEmail('.test@email.com')).toEqual(false);
-            expect(parameter.isEmail('test.@email.com')).toEqual(false);
-            expect(parameter.isEmail('test..test@email.com')).toEqual(false);
-            expect(parameter.isEmail('testemail.com')).toEqual(false);
-            expect(parameter.isEmail('test\@test@iana.org')).toEqual(false);
-            expect(parameter.isEmail('test@test.org.')).toEqual(false);
-            expect(parameter.isEmail('test@email..com')).toEqual(false);
+            var parameterSrv = new parameter_service_1.ParameterService();
+            expect(parameterSrv.isEmail(undefined)).toEqual(false);
+            expect(parameterSrv.isEmail(null)).toEqual(false);
+            expect(parameterSrv.isEmail(true)).toEqual(false);
+            expect(parameterSrv.isEmail('.test@email.com')).toEqual(false);
+            expect(parameterSrv.isEmail('test.@email.com')).toEqual(false);
+            expect(parameterSrv.isEmail('test..test@email.com')).toEqual(false);
+            expect(parameterSrv.isEmail('testemail.com')).toEqual(false);
+            expect(parameterSrv.isEmail('test\@test@iana.org')).toEqual(false);
+            expect(parameterSrv.isEmail('test@test.org.')).toEqual(false);
+            expect(parameterSrv.isEmail('test@email..com')).toEqual(false);
+        });
+    });
+    describe('isBoolean()', function () {
+        it('should return true', function () {
+            var parameterSrv = new parameter_service_1.ParameterService();
+            expect(parameterSrv.isBoolean(true)).toEqual(true);
+            expect(parameterSrv.isBoolean(false)).toEqual(true);
+        });
+        it('should return false', function () {
+            var parameterSrv = new parameter_service_1.ParameterService();
+            expect(parameterSrv.isBoolean(undefined)).toEqual(false);
+            expect(parameterSrv.isBoolean(null)).toEqual(false);
+            expect(parameterSrv.isBoolean('true')).toEqual(false);
+            expect(parameterSrv.isBoolean(1)).toEqual(false);
         });
     });
 });

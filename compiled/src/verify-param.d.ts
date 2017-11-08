@@ -1,4 +1,12 @@
 export declare class VerifyParam {
+    private parameterSrv;
+    private param;
+    private paramName;
+    private paramSet;
+    private validationErrorMsg;
+    constructor(parameter: any, parameterName?: string);
+    private paramIsSet();
+    private setError(msg);
     isDefined(): void;
     isDefinedOrThrowError(err?: any): void;
     isNotDefined(): void;
@@ -6,12 +14,14 @@ export declare class VerifyParam {
     isSetOrThrowError(err?: any): void;
     isSetOrUseDefault(): void;
     isNotSet(): void;
+    isTruthy(): void;
+    isFalsey(): void;
     isValid(): void;
     isNotValid(): void;
     isValidOrThrowError(err?: any): void;
     string(): void;
     array(): void;
-    number(): void;
+    number(allowNumbersAsStrings?: boolean): VerifyParam;
     int(): void;
     json(): void;
     min(): void;

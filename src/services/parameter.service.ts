@@ -22,7 +22,7 @@ export enum ParameterDataType {
  * @export
  * @class Parameter
  */
-export class Parameter {
+export class ParameterService {
 
   /**
    * Get the data type of an object
@@ -32,15 +32,15 @@ export class Parameter {
    * @returns {ParameterDataType} 
    */
   getDataType(param: any): ParameterDataType {
-    if(typeof param === 'undefined') {
+    if(!this.isDefined(param)) {
       return ParameterDataType.Undefined;
     } else if(param === null) {
       return ParameterDataType.Null;
-    } else if(typeof param === "number"){
+    } else if(this.isNumber(param)){
       return ParameterDataType.Number;
-    } else if (typeof param === "string") {
+    } else if (this.isString(param)) {
       return ParameterDataType.String;
-    } else if(typeof param === "boolean") {
+    } else if(this.isBoolean(param)) {
       return ParameterDataType.Boolean;
     } else if(typeof param === "object") {
       // could be an array, regex, json object, function
@@ -51,6 +51,35 @@ export class Parameter {
       }
     }
     return ParameterDataType.Unknown;
+  }
+
+
+  /**
+   * Get the data type of the parameter as a string
+   * 
+   * @param {*} param 
+   * @returns {string} 
+   * @memberof ParameterService
+   */
+  getDataTypeAsString(param: any): string {
+    switch(this.getDataType(param)) {
+      case ParameterDataType.Undefined:
+        return 'undefined';
+      case ParameterDataType.Null:
+        return 'null';
+      case ParameterDataType.Number:
+        return 'number';
+      case ParameterDataType.String:
+        return 'string';
+      case ParameterDataType.Boolean:
+        return 'boolean';
+      case ParameterDataType.Array:
+        return 'array';
+      case ParameterDataType.Json:
+        return 'json';
+      case ParameterDataType.Unknown:
+        return 'unknown';
+    }
   }
 
 
@@ -118,33 +147,29 @@ export class Parameter {
 
 
   /**
-   * Determine if a parameter is a number. This includes strings that contain
-   * numbers, example: '10' but not '10 abc'
-   * 
-   * TODO: add param that allows you to disable the numbers as a string
+   * Determine if a parameter is a number. 
    * 
    * @param {*} param 
    * @returns {boolean} 
    * @memberof Parameter
    */
-  isNumber(param: any): boolean {
-    if(!this.isSet(param)) { return false; }
+  isNumber(param: any, allowNumbersAsStrings: boolean = false): boolean {
+    if(!this.isSet(param) || this.isArray(param)) { return false; }
+    if(this.isString(param) && !allowNumbersAsStrings){ return false; }
     return (!(isNaN(parseFloat(param)) || !isFinite(param)));
   }
 
 
   /**
-   * Determine if a parameter is an integer, this includes strings that contain
-   * integers, example: '10' but not '10 abc'
-   * 
-   * TODO: add param that allows you to disable the integers as a string
+   * Determine if a parameter is an integer.
    * 
    * @param {*} param 
    * @returns {boolean} 
    * @memberof Parameter
    */
-  isInt(param: any): boolean {
+  isInt(param: any, allowIntAsString: boolean = false): boolean {
     if(!this.isSet(param)) { return false; }
+    if(this.isString(param) && !allowIntAsString){ return false; }
     let x = parseFloat(param);
     return (!(isNaN(param) || !((x | 0) === x)));
   }
@@ -161,5 +186,18 @@ export class Parameter {
     if(!this.isSet(param)) { return false; }
     var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return (re.test(param));
+  }
+
+
+  /**
+   * Determine if a parameter is a boolean
+   * 
+   * @param {*} param 
+   * @returns {boolean} 
+   * @memberof Parameter
+   */
+  isBoolean(param: any): boolean {
+    if(!this.isSet(param)) { return false; }
+    return (typeof param === "boolean");
   }
 }

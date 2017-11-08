@@ -41,6 +41,26 @@ var ParameterService = (function () {
         }
         return ParameterDataType.Unknown;
     };
+    ParameterService.prototype.getDataTypeAsString = function (param) {
+        switch (this.getDataType(param)) {
+            case ParameterDataType.Undefined:
+                return 'undefined';
+            case ParameterDataType.Null:
+                return 'null';
+            case ParameterDataType.Number:
+                return 'number';
+            case ParameterDataType.String:
+                return 'string';
+            case ParameterDataType.Boolean:
+                return 'boolean';
+            case ParameterDataType.Array:
+                return 'array';
+            case ParameterDataType.Json:
+                return 'json';
+            case ParameterDataType.Unknown:
+                return 'unknown';
+        }
+    };
     ParameterService.prototype.isDefined = function (param) {
         return (typeof param !== 'undefined');
     };
@@ -67,7 +87,7 @@ var ParameterService = (function () {
     };
     ParameterService.prototype.isNumber = function (param, allowNumbersAsStrings) {
         if (allowNumbersAsStrings === void 0) { allowNumbersAsStrings = false; }
-        if (!this.isSet(param)) {
+        if (!this.isSet(param) || this.isArray(param)) {
             return false;
         }
         if (this.isString(param) && !allowNumbersAsStrings) {
@@ -102,4 +122,4 @@ var ParameterService = (function () {
     return ParameterService;
 }());
 exports.ParameterService = ParameterService;
-//# sourceMappingURL=parameter.js.map
+//# sourceMappingURL=parameter.service.js.map
