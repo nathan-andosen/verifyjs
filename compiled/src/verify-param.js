@@ -34,9 +34,26 @@ var VerifyParam = (function () {
     VerifyParam.prototype.isNotSet = function () { };
     VerifyParam.prototype.isTruthy = function () { };
     VerifyParam.prototype.isFalsey = function () { };
-    VerifyParam.prototype.isValid = function () { };
-    VerifyParam.prototype.isNotValid = function () { };
-    VerifyParam.prototype.isValidOrThrowError = function (err) { };
+    VerifyParam.prototype.isValid = function () {
+        return (this.validationErrorMsg === null);
+    };
+    VerifyParam.prototype.isNotValid = function () {
+        return (!this.isValid());
+    };
+    VerifyParam.prototype.isValidOrThrowError = function (err) {
+        if (this.isValid()) {
+            return true;
+        }
+        if (err) {
+            if (this.parameterSrv.isString(err)) {
+                throw new Error(err);
+            }
+            throw err;
+        }
+        else {
+            throw new Error(this.validationErrorMsg);
+        }
+    };
     VerifyParam.prototype.string = function () { };
     VerifyParam.prototype.array = function () { };
     VerifyParam.prototype.number = function (allowNumbersAsStrings) {

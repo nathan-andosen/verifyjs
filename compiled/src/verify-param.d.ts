@@ -16,9 +16,9 @@ export declare class VerifyParam {
     isNotSet(): void;
     isTruthy(): void;
     isFalsey(): void;
-    isValid(): void;
-    isNotValid(): void;
-    isValidOrThrowError(err?: any): void;
+    isValid(): boolean;
+    isNotValid(): boolean;
+    isValidOrThrowError(err?: any): boolean;
     string(): void;
     array(): void;
     number(allowNumbersAsStrings?: boolean): VerifyParam;

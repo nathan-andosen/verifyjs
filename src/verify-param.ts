@@ -65,9 +65,25 @@ export class VerifyParam {
 
 
   // only the valid functions can be used with the chainable functions
-  isValid() {}
-  isNotValid() {}
-  isValidOrThrowError(err?: any) {} // err can be string or Error or custom error
+  isValid(): boolean {
+    return (this.validationErrorMsg === null);
+  }
+  isNotValid(): boolean {
+    return (!this.isValid());
+  }
+  isValidOrThrowError(err?: any): boolean {
+    if(this.isValid()) {
+      return true;
+    }
+    if(err) {
+      if(this.parameterSrv.isString(err)) {
+        throw new Error(err);
+      }
+      throw err;
+    } else {
+      throw new Error(this.validationErrorMsg);
+    }
+  } 
 
 
 

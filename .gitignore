@@ -5,6 +5,7 @@ node_modules/
 *.swo
 .nyc_output/
 coverage/
+compiled/spec
 
 # OS generated files #
 ######################
