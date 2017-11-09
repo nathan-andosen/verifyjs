@@ -19,7 +19,7 @@ export declare class VerifyParam {
     isValid(): boolean;
     isNotValid(): boolean;
     isValidOrThrowError(err?: any): boolean;
-    string(): void;
+    string(): VerifyParam;
     array(): void;
     number(allowNumbersAsStrings?: boolean): VerifyParam;
     int(): void;

@@ -8,7 +8,7 @@ var VerifyParam = (function () {
         this.validationErrorMsg = null;
         this.parameterSrv = dependency_manager_1.dependencyManager.get(parameter_service_1.ParameterService);
         this.param = parameter;
-        this.paramName = (parameterName) ? parameterName : '';
+        this.paramName = (parameterName) ? ' (' + parameterName + ')' : '';
     }
     VerifyParam.prototype.paramIsSet = function () {
         if (this.paramSet !== null) {
@@ -54,13 +54,18 @@ var VerifyParam = (function () {
             throw new Error(this.validationErrorMsg);
         }
     };
-    VerifyParam.prototype.string = function () { };
+    VerifyParam.prototype.string = function () {
+        if (this.paramIsSet() && !this.parameterSrv.isString(this.param)) {
+            this.setError('Parameter' + this.paramName + ' is not a string');
+        }
+        return this;
+    };
     VerifyParam.prototype.array = function () { };
     VerifyParam.prototype.number = function (allowNumbersAsStrings) {
         if (allowNumbersAsStrings === void 0) { allowNumbersAsStrings = false; }
         if (this.paramIsSet()
             && !this.parameterSrv.isNumber(this.param, allowNumbersAsStrings)) {
-            this.setError('Parameter ' + this.paramName + ' is not a number');
+            this.setError('Parameter' + this.paramName + ' is not a number');
         }
         return this;
     };

@@ -5,4 +5,5 @@ export declare class EqualService {
     private binaryEquals(param, paramName, val);
     private arrayEquals(param, paramName, val);
     private arraysAreEqual(a, b);
+    private jsonEquals(param, paramName, val);
 }

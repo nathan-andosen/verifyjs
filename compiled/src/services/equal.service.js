@@ -4,6 +4,7 @@ var dependency_manager_1 = require("./dependency-manager");
 var parameter_service_1 = require("./parameter.service");
 var EqualService = (function () {
     function EqualService() {
+        this.parameterSrv = null;
         this.parameterSrv = dependency_manager_1.dependencyManager.get(parameter_service_1.ParameterService);
     }
     EqualService.prototype.paramEqualsValue = function (param, paramName, val) {
@@ -15,6 +16,7 @@ var EqualService = (function () {
             return this.arrayEquals(param, paramName, val);
         }
         else if (this.parameterSrv.isJson(param)) {
+            return this.jsonEquals(param, paramName, val);
         }
         else {
             return new Error('Equal validation can only be used on data types: ' +
@@ -26,13 +28,13 @@ var EqualService = (function () {
         if (param === val) {
             return true;
         }
-        return new Error('Parameter ' + paramName + ' does not equal ' + val);
+        return new Error('Parameter' + paramName + ' does not equal ' + val);
     };
     EqualService.prototype.arrayEquals = function (param, paramName, val) {
-        if (this.arraysAreEqual(param, val)) {
+        if (this.parameterSrv.isArray(val) && this.arraysAreEqual(param, val)) {
             return true;
         }
-        return new Error('Parameter ' + paramName + ' does not equal the ' +
+        return new Error('Parameter' + paramName + ' does not equal the ' +
             'supplied array object');
     };
     EqualService.prototype.arraysAreEqual = function (a, b) {
@@ -72,6 +74,13 @@ var EqualService = (function () {
             }
         }
         return true;
+    };
+    EqualService.prototype.jsonEquals = function (param, paramName, val) {
+        if (JSON.stringify(param) === JSON.stringify(val)) {
+            return true;
+        }
+        return new Error('Parameter' + paramName + ' does not equal the ' +
+            'supplied json object');
     };
     return EqualService;
 }());

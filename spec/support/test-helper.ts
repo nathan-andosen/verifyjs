@@ -1,9 +1,7 @@
-import { dependencyManager } from '../../src/services/dependency-manager';
-import { ParameterService } from '../../src/services/parameter.service';
+import { setupDependencies } from '../../src/setup-dependencies';
 
 export class TestHelper {
   setupDependencyManager() {
-    dependencyManager.clear();
-    dependencyManager.add(ParameterService);
+    setupDependencies();
   }
 }

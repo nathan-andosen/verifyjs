@@ -12,7 +12,7 @@ export class VerifyParam {
   constructor(parameter: any, parameterName?: string) {
     this.parameterSrv = dependencyManager.get(ParameterService);
     this.param = parameter;
-    this.paramName = (parameterName) ? parameterName : '';
+    this.paramName = (parameterName) ? ' (' + parameterName + ')' : '';
   }
 
 
@@ -64,13 +64,44 @@ export class VerifyParam {
   isFalsey() {}
 
 
-  // only the valid functions can be used with the chainable functions
+
+
+
+
+
+  
+  /**
+   * Determine if the parameter is valid after the chainable functions have
+   * been called
+   * 
+   * @returns {boolean} 
+   * @memberof VerifyParam
+   */
   isValid(): boolean {
     return (this.validationErrorMsg === null);
   }
+
+
+  /**
+   * Determine if the parameter is not valid after the chainable functions 
+   * have been called
+   * 
+   * @returns {boolean} 
+   * @memberof VerifyParam
+   */
   isNotValid(): boolean {
     return (!this.isValid());
   }
+
+
+  /**
+   * Determine if the parameter is valid after the chainable functions have 
+   * been called or if not valid, throw an error.
+   * 
+   * @param {*} [err] 
+   * @returns {boolean} 
+   * @memberof VerifyParam
+   */
   isValidOrThrowError(err?: any): boolean {
     if(this.isValid()) {
       return true;
@@ -89,7 +120,13 @@ export class VerifyParam {
 
   // validate functions will return the verify instance object so it can be chained
 
-  string() {}
+  string(): VerifyParam {
+    if(this.paramIsSet() && !this.parameterSrv.isString(this.param)) {
+      this.setError('Parameter' + this.paramName + ' is not a string');
+    }
+    return this;
+  }
+  
   array() {}
 
 
@@ -104,7 +141,7 @@ export class VerifyParam {
   number(allowNumbersAsStrings: boolean = false): VerifyParam {
     if(this.paramIsSet() 
     && !this.parameterSrv.isNumber(this.param, allowNumbersAsStrings)) {
-      this.setError('Parameter ' + this.paramName + ' is not a number');
+      this.setError('Parameter' + this.paramName + ' is not a number');
     }
     return this;
   }

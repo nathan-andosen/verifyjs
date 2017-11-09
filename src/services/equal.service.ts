@@ -8,7 +8,7 @@ import { ParameterService, ParameterDataType } from './parameter.service';
  * @class EqualService
  */
 export class EqualService {
-  private parameterSrv: ParameterService;
+  private parameterSrv: ParameterService = null;
 
 
   /**
@@ -21,6 +21,16 @@ export class EqualService {
   }
 
 
+  /**
+   * Check if a parameter equals a value, if it does not equal, it returns an
+   * error
+   * 
+   * @param {*} param 
+   * @param {string} paramName 
+   * @param {*} val 
+   * @returns {(boolean|Error)} 
+   * @memberof EqualService
+   */
   paramEqualsValue(param: any, paramName: string, val: any): boolean|Error {
     if(!this.parameterSrv.isSet(param) || this.parameterSrv.isString(param)
     || this.parameterSrv.isNumber(param)) {
@@ -37,23 +47,52 @@ export class EqualService {
   }
 
 
+  /**
+   * Check if a parameter and value are equal by using the === operator
+   * 
+   * @private
+   * @param {*} param 
+   * @param {string} paramName 
+   * @param {*} val 
+   * @returns {(boolean|Error)} 
+   * @memberof EqualService
+   */
   private binaryEquals(param: any, paramName: string, val: any): boolean|Error {
     if(param === val) {
       return true;
     }
-    return new Error('Parameter ' + paramName + ' does not equal ' + val);
+    return new Error('Parameter' + paramName + ' does not equal ' + val);
   }
 
 
+  /**
+   * Check if two arrays are equal
+   * 
+   * @private
+   * @param {*} param 
+   * @param {string} paramName 
+   * @param {*} val 
+   * @returns {(boolean|Error)} 
+   * @memberof EqualService
+   */
   private arrayEquals(param: any, paramName: string, val: any): boolean|Error {
-    if(this.arraysAreEqual(param, val)) {
+    if(this.parameterSrv.isArray(val) && this.arraysAreEqual(param, val)) {
       return true;
     }
-    return new Error('Parameter ' + paramName + ' does not equal the ' +
+    return new Error('Parameter' + paramName + ' does not equal the ' +
     'supplied array object');
   }
 
 
+  /**
+   * Check if two arrays are equal
+   * 
+   * @private
+   * @param {any[]} a 
+   * @param {any[]} b 
+   * @returns {boolean} 
+   * @memberof EqualService
+   */
   private arraysAreEqual(a: any[], b: any[]): boolean {
     if(a === b) { return true; }
     if(a.length !== b.length) { return false; }
@@ -82,12 +121,21 @@ export class EqualService {
   }
 
 
+  /**
+   * Check if two json objects are equal
+   * 
+   * @private
+   * @param {*} param 
+   * @param {string} paramName 
+   * @param {*} val 
+   * @returns {(boolean|Error)} 
+   * @memberof EqualService
+   */
   private jsonEquals(param: any, paramName: string, val: any): boolean|Error {
     if(JSON.stringify(param) === JSON.stringify(val)) {
       return true;
     }
-    return new Error('Parameter ' + paramName + ' does not equal the ' +
+    return new Error('Parameter' + paramName + ' does not equal the ' +
     'supplied json object');
   }
-
 }
