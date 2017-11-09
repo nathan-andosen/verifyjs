@@ -25,10 +25,29 @@ var VerifyParam = (function () {
     VerifyParam.prototype.setError = function (msg) {
         this.validationErrorMsg = msg;
     };
-    VerifyParam.prototype.isDefined = function () { };
-    VerifyParam.prototype.isDefinedOrThrowError = function (err) { };
-    VerifyParam.prototype.isNotDefined = function () { };
-    VerifyParam.prototype.isSet = function () { };
+    VerifyParam.prototype.isDefined = function () {
+        return this.parameterSrv.isDefined(this.param);
+    };
+    VerifyParam.prototype.isDefinedOrThrowError = function (err) {
+        if (this.isDefined()) {
+            return true;
+        }
+        if (err) {
+            if (this.parameterSrv.isString(err)) {
+                throw new Error(err);
+            }
+            throw err;
+        }
+        else {
+            throw new Error('Parameter' + this.paramName + ' is undefined');
+        }
+    };
+    VerifyParam.prototype.isNotDefined = function () {
+        return (!this.isDefined());
+    };
+    VerifyParam.prototype.isSet = function () {
+        return this.paramIsSet();
+    };
     VerifyParam.prototype.isSetOrThrowError = function (err) { };
     VerifyParam.prototype.isSetOrUseDefault = function () { };
     VerifyParam.prototype.isNotSet = function () { };
@@ -60,20 +79,42 @@ var VerifyParam = (function () {
         }
         return this;
     };
-    VerifyParam.prototype.array = function () { };
-    VerifyParam.prototype.number = function (allowNumbersAsStrings) {
-        if (allowNumbersAsStrings === void 0) { allowNumbersAsStrings = false; }
+    VerifyParam.prototype.array = function () {
+        if (this.paramIsSet() && !this.parameterSrv.isArray(this.param)) {
+            this.setError('Parameter' + this.paramName + ' is not an array');
+        }
+        return this;
+    };
+    VerifyParam.prototype.number = function (allowNumberAsString) {
+        if (allowNumberAsString === void 0) { allowNumberAsString = false; }
         if (this.paramIsSet()
-            && !this.parameterSrv.isNumber(this.param, allowNumbersAsStrings)) {
+            && !this.parameterSrv.isNumber(this.param, allowNumberAsString)) {
             this.setError('Parameter' + this.paramName + ' is not a number');
         }
         return this;
     };
-    VerifyParam.prototype.int = function () { };
-    VerifyParam.prototype.json = function () { };
+    VerifyParam.prototype.int = function (allowIntAsString) {
+        if (allowIntAsString === void 0) { allowIntAsString = false; }
+        if (this.paramIsSet()
+            && !this.parameterSrv.isInt(this.param, allowIntAsString)) {
+            this.setError('Parameter' + this.paramName + ' is not an integer');
+        }
+        return this;
+    };
+    VerifyParam.prototype.json = function () {
+        if (this.paramIsSet() && !this.parameterSrv.isJson(this.param)) {
+            this.setError('Parameter' + this.paramName + ' is not a json object');
+        }
+        return this;
+    };
+    VerifyParam.prototype.email = function () {
+        if (this.paramIsSet() && !this.parameterSrv.isEmail(this.param)) {
+            this.setError('Parameter' + this.paramName + ' is not a valid email');
+        }
+        return this;
+    };
     VerifyParam.prototype.min = function () { };
     VerifyParam.prototype.max = function () { };
-    VerifyParam.prototype.email = function () { };
     VerifyParam.prototype.equals = function (val) { };
     VerifyParam.prototype.notEquals = function (val) { };
     VerifyParam.prototype.lengthEquals = function (val) { };
