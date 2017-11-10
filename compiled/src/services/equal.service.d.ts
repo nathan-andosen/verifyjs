@@ -6,4 +6,8 @@ export declare class EqualService {
     private arrayEquals(param, paramName, val);
     private arraysAreEqual(a, b);
     private jsonEquals(param, paramName, val);
+    paramEqualsMin(param: any, paramName: string, val: number): boolean | Error;
+    private stringMin(param, paramName, val);
+    private arrayMin(param, paramName, val);
+    private numberMin(param, paramName, val);
 }

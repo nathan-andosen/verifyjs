@@ -2,11 +2,13 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var dependency_manager_1 = require("./services/dependency-manager");
 var parameter_service_1 = require("./services/parameter.service");
+var equal_service_1 = require("./services/equal.service");
 var VerifyParam = (function () {
     function VerifyParam(parameter, parameterName) {
         this.paramSet = null;
         this.validationErrorMsg = null;
         this.parameterSrv = dependency_manager_1.dependencyManager.get(parameter_service_1.ParameterService);
+        this.equalSrv = dependency_manager_1.dependencyManager.get(equal_service_1.EqualService);
         this.param = parameter;
         this.paramName = (parameterName) ? ' (' + parameterName + ')' : '';
     }
@@ -48,11 +50,47 @@ var VerifyParam = (function () {
     VerifyParam.prototype.isSet = function () {
         return this.paramIsSet();
     };
-    VerifyParam.prototype.isSetOrThrowError = function (err) { };
-    VerifyParam.prototype.isSetOrUseDefault = function () { };
-    VerifyParam.prototype.isNotSet = function () { };
-    VerifyParam.prototype.isTruthy = function () { };
-    VerifyParam.prototype.isFalsey = function () { };
+    VerifyParam.prototype.isNotSet = function () {
+        return (!this.isSet());
+    };
+    VerifyParam.prototype.isSetOrThrowError = function (err) {
+        if (this.isSet()) {
+            return true;
+        }
+        if (err) {
+            if (this.parameterSrv.isString(err)) {
+                throw new Error(err);
+            }
+            throw err;
+        }
+        else {
+            throw new Error(this.validationErrorMsg);
+        }
+    };
+    VerifyParam.prototype.isSetOrUseDefault = function (defaultVal) {
+        if (!this.paramIsSet()) {
+            return defaultVal;
+        }
+        return this.param;
+    };
+    VerifyParam.prototype.isTruthy = function () {
+        var val = (this.parameterSrv.isString(this.param))
+            ? this.param.toLowerCase() : this.param;
+        if (val && (val === '1' || val >= 1 || val === true || val === 'true'
+            || val === 'yes')) {
+            return true;
+        }
+        return false;
+    };
+    VerifyParam.prototype.isFalsey = function () {
+        var val = (this.parameterSrv.isString(this.param))
+            ? this.param.toLowerCase() : this.param;
+        if (val === '0' || val === 'false' || val === 'no' || val === false
+            || val < 1 || val === 'nil') {
+            return true;
+        }
+        return false;
+    };
     VerifyParam.prototype.isValid = function () {
         return (this.validationErrorMsg === null);
     };
@@ -113,7 +151,15 @@ var VerifyParam = (function () {
         }
         return this;
     };
-    VerifyParam.prototype.min = function () { };
+    VerifyParam.prototype.min = function (val) {
+        if (this.paramIsSet()) {
+            var result = this.equalSrv.paramEqualsMin(this.param, this.paramName, val);
+            if (result instanceof Error) {
+                this.setError(result.message);
+            }
+        }
+        return this;
+    };
     VerifyParam.prototype.max = function () { };
     VerifyParam.prototype.equals = function (val) { };
     VerifyParam.prototype.notEquals = function (val) { };

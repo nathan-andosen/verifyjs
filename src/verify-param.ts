@@ -1,5 +1,9 @@
 import { dependencyManager } from './services/dependency-manager';
-import { ParameterService } from './services/parameter.service';
+import { 
+  ParameterService, 
+  ParameterDataType 
+} from './services/parameter.service';
+import { EqualService } from './services/equal.service';
 
 
 /**
@@ -10,6 +14,7 @@ import { ParameterService } from './services/parameter.service';
  */
 export class VerifyParam {
   private parameterSrv: ParameterService;
+  private equalSrv: EqualService;
   private param: any;
   private paramName: string;
   private paramSet: boolean = null;
@@ -25,6 +30,7 @@ export class VerifyParam {
    */
   constructor(parameter: any, parameterName?: string) {
     this.parameterSrv = dependencyManager.get(ParameterService);
+    this.equalSrv = dependencyManager.get(EqualService);
     this.param = parameter;
     this.paramName = (parameterName) ? ' (' + parameterName + ')' : '';
   }
@@ -52,14 +58,17 @@ export class VerifyParam {
   }
 
 
+  /**
+   * Set the validation error
+   * 
+   * @private
+   * @param {string} msg 
+   * @memberof VerifyParam
+   */
   private setError(msg: string) {
     this.validationErrorMsg = msg;
   }
 
-
-
-
-  // functions starting with is will return a boolean
 
   /**
    * Determine if the parameter is not equal to undefined
@@ -80,7 +89,7 @@ export class VerifyParam {
    * @returns {(boolean|Error)} 
    * @memberof VerifyParam
    */
-  isDefinedOrThrowError(err?: any): boolean|Error {
+  isDefinedOrThrowError(err?: any): boolean {
     if(this.isDefined()) {
       return true;
     }
@@ -116,26 +125,89 @@ export class VerifyParam {
     return this.paramIsSet();
   }
 
+
+  /**
+   * Determine if the parameter is not set
+   * 
+   * @returns {boolean} 
+   * @memberof VerifyParam
+   */
+  isNotSet(): boolean {
+    return (!this.isSet());
+  }
+
+
+  /**
+   * Determine if the parameter is set or throw an error
+   * 
+   * @param {*} [err] 
+   * @returns {boolean} 
+   * @memberof VerifyParam
+   */
+  isSetOrThrowError(err?: any): boolean {
+    if(this.isSet()) {
+      return true;
+    }
+    if(err) {
+      if(this.parameterSrv.isString(err)) {
+        throw new Error(err);
+      }
+      throw err;
+    } else {
+      throw new Error(this.validationErrorMsg);
+    }
+  }
+
+
+  /**
+   * Determine if the parameter is set, if not, set it to the default value
+   * 
+   * @param {*} defaultVal 
+   * @returns {*} 
+   * @memberof VerifyParam
+   */
+  isSetOrUseDefault(defaultVal: any): any {
+    if(!this.paramIsSet()) {
+      return defaultVal;
+    }
+    return this.param;
+  } 
   
-  isSetOrThrowError(err?: any) {}
-  isSetOrUseDefault() {} // myParam = verify(myParam).isSetOrUseDefault(10); // returns the parameter if set, or the default value
-  isNotSet() {}
 
-  // Returns true for:
-  // true, "true", "yes", 1 (or greater), "1" (or greater), 
-  isTruthy() {}
-
-  // Returns true for:
-  // false, "false", "no", 0, "0", "nil", undefined, null
-  isFalsey() {}
-
-
-
-
-
-
+  /**
+   * Determine if the paramter is truthy
+   * 
+   * @returns {boolean} 
+   * @memberof VerifyParam
+   */
+  isTruthy(): boolean {
+    let val = (this.parameterSrv.isString(this.param)) 
+      ? this.param.toLowerCase() : this.param;
+    if(val && (val === '1' || val >= 1 || val === true || val === 'true' 
+    || val === 'yes')) {
+      return true;
+    }
+    return false;
+  }
 
   
+  /**
+   * Determine if the parameter is falsey
+   * 
+   * @returns {boolean} 
+   * @memberof VerifyParam
+   */
+  isFalsey(): boolean {
+    let val = (this.parameterSrv.isString(this.param)) 
+      ? this.param.toLowerCase() : this.param;
+    if(val === '0' || val === 'false' || val === 'no' || val === false 
+    || val < 1 || val === 'nil') {
+      return true;
+    } 
+    return false;
+  }
+
+
   /**
    * Determine if the parameter is valid after the chainable functions have
    * been called
@@ -182,9 +254,7 @@ export class VerifyParam {
     }
   } 
 
-
-
-  // validate functions will return the verify instance object so it can be chained
+  // CHAINABLE FUNCTIONS BELOW /////////////////////////////////////////////////
 
   /**
    * Determine if the parameter is a string
@@ -273,7 +343,28 @@ export class VerifyParam {
     return this;
   }
 
-  min() {}
+
+  /**
+   * Determine if the parameter meets the minimum value
+   * 
+   * @param {number} val 
+   * @returns {VerifyParam} 
+   * @memberof VerifyParam
+   */
+  min(val: number): VerifyParam {
+    if(this.paramIsSet()) {
+      let result = this.equalSrv.paramEqualsMin(this.param, this.paramName, val);
+      if(result instanceof Error) {
+        this.setError(result.message);
+      }
+    }
+    return this;
+  }
+
+
+ 
+
+
   max() {}
 
   equals(val: any) {} // check if the parameter equals a value

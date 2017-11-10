@@ -82,6 +82,44 @@ var EqualService = (function () {
         return new Error('Parameter' + paramName + ' does not equal the ' +
             'supplied json object');
     };
+    EqualService.prototype.paramEqualsMin = function (param, paramName, val) {
+        var dataType = this.parameterSrv.getDataType(param);
+        if (dataType === parameter_service_1.ParameterDataType.String) {
+            return this.stringMin(param, paramName, val);
+        }
+        else if (dataType === parameter_service_1.ParameterDataType.Array) {
+            return this.arrayMin(param, paramName, val);
+        }
+        else if (dataType === parameter_service_1.ParameterDataType.Number) {
+            return this.numberMin(param, paramName, val);
+        }
+        else {
+            return new Error('Parameter' + paramName + ' is not the correct ' +
+                'data type for the min() function, only String, Number and Array are ' +
+                'supported');
+        }
+    };
+    EqualService.prototype.stringMin = function (param, paramName, val) {
+        if (param.length < val) {
+            return new Error('Parameter' + paramName + ' has a length less ' +
+                'than the minimum value required');
+        }
+        return true;
+    };
+    EqualService.prototype.arrayMin = function (param, paramName, val) {
+        if (param.length < val) {
+            return new Error('Parameter' + paramName + ' has an array length less ' +
+                'than the minimum value required');
+        }
+        return true;
+    };
+    EqualService.prototype.numberMin = function (param, paramName, val) {
+        if (param < val) {
+            return new Error('Parameter' + paramName + ' has a value less ' +
+                'than the minimum value required');
+        }
+        return true;
+    };
     return EqualService;
 }());
 exports.EqualService = EqualService;

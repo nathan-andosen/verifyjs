@@ -138,4 +138,88 @@ export class EqualService {
     return new Error('Parameter' + paramName + ' does not equal the ' +
     'supplied json object');
   }
+
+
+  /**
+   * Determine if the parameter equals a minimum value. Can only be used 
+   * with String, Number and Array data types
+   * 
+   * @param {*} param 
+   * @param {string} paramName 
+   * @param {number} val 
+   * @returns {(boolean|Error)} 
+   * @memberof EqualService
+   */
+  paramEqualsMin(param: any, paramName: string, 
+  val: number): boolean|Error {
+    let dataType = this.parameterSrv.getDataType(param);
+    if(dataType === ParameterDataType.String) {
+      return this.stringMin(param, paramName, val);
+    } else if(dataType === ParameterDataType.Array) {
+      return this.arrayMin(param, paramName, val);
+    } else if(dataType === ParameterDataType.Number) {
+      return this.numberMin(param, paramName, val);
+    } else {
+      return new Error('Parameter' + paramName + ' is not the correct ' +
+      'data type for the min() function, only String, Number and Array are ' +
+      'supported');
+    }
+  }
+
+
+  /**
+   * Determine if the parameters string length meets the minimum value
+   * 
+   * @private
+   * @param {*} param 
+   * @param {string} paramName 
+   * @param {number} val 
+   * @returns {(boolean|Error)} 
+   * @memberof EqualService
+   */
+  private stringMin(param: any, paramName: string, val: number): boolean|Error {
+    if(param.length < val) {
+      return new Error('Parameter' + paramName + ' has a length less ' +
+      'than the minimum value required');
+    }
+    return true;
+  }
+
+
+  /**
+   * Determine if the parameters array length meets the minimum value
+   * 
+   * @private
+   * @param {*} param 
+   * @param {string} paramName 
+   * @param {number} val 
+   * @returns {(boolean|Error)} 
+   * @memberof EqualService
+   */
+  private arrayMin(param: any, paramName: string, val: number): boolean|Error {
+    if(param.length < val) {
+      return new Error('Parameter' + paramName + ' has an array length less ' +
+      'than the minimum value required');
+    }
+    return true;
+  }
+
+
+  /**
+   * Determine if the parameters value meets the minimum value
+   * 
+   * @private
+   * @param {*} param 
+   * @param {string} paramName 
+   * @param {number} val 
+   * @returns {(boolean|Error)} 
+   * @memberof EqualService
+   */
+  private numberMin(param: any, paramName: string, val: number): boolean|Error {
+    if(param < val) {
+      return new Error('Parameter' + paramName + ' has a value less ' +
+      'than the minimum value required');
+    }
+    return true;
+  }
 }

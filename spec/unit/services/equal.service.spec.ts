@@ -112,4 +112,36 @@ describe('EqualService', () => {
         .toEqual(true);
     });
   });
+
+
+  /**
+   * paramEqualsMin()
+   */
+  describe('paramEqualsMin()', () => {
+    it('should return true', () => {
+      let param = 10, val = 5;
+      expect(equalSrv.paramEqualsMin(param, '', val)).toEqual(true);
+      let param1 = 'password', val1 = 5;
+      expect(equalSrv.paramEqualsMin(param1, '', val1)).toEqual(true);
+      let param2 = [1,2,3,4,5,6], val2 = 5;
+      expect(equalSrv.paramEqualsMin(param2, '', val2)).toEqual(true);
+      let param3 = 5, val3 = 5;
+      expect(equalSrv.paramEqualsMin(param3, '', val3)).toEqual(true);
+    });
+
+    it('should return error', () => {
+      let param = 2, val = 5;
+      expect(equalSrv.paramEqualsMin(param, '', val) instanceof Error)
+      .toEqual(true);
+      let param1 = 'password', val1 = 15;
+      expect(equalSrv.paramEqualsMin(param1, '', val1) instanceof Error)
+      .toEqual(true);
+      let param2 = [1,2], val2 = 5;
+      expect(equalSrv.paramEqualsMin(param2, '', val2) instanceof Error)
+      .toEqual(true);
+      let param3 = null, val3 = 5;
+      expect(equalSrv.paramEqualsMin(param3, '', val3) instanceof Error)
+      .toEqual(true);
+    });
+  });
 });

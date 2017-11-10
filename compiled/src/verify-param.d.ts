@@ -1,5 +1,6 @@
 export declare class VerifyParam {
     private parameterSrv;
+    private equalSrv;
     private param;
     private paramName;
     private paramSet;
@@ -8,14 +9,14 @@ export declare class VerifyParam {
     private paramIsSet();
     private setError(msg);
     isDefined(): boolean;
-    isDefinedOrThrowError(err?: any): boolean | Error;
+    isDefinedOrThrowError(err?: any): boolean;
     isNotDefined(): boolean;
     isSet(): boolean;
-    isSetOrThrowError(err?: any): void;
-    isSetOrUseDefault(): void;
-    isNotSet(): void;
-    isTruthy(): void;
-    isFalsey(): void;
+    isNotSet(): boolean;
+    isSetOrThrowError(err?: any): boolean;
+    isSetOrUseDefault(defaultVal: any): any;
+    isTruthy(): boolean;
+    isFalsey(): boolean;
     isValid(): boolean;
     isNotValid(): boolean;
     isValidOrThrowError(err?: any): boolean;
@@ -25,7 +26,7 @@ export declare class VerifyParam {
     int(allowIntAsString?: boolean): VerifyParam;
     json(): VerifyParam;
     email(): VerifyParam;
-    min(): void;
+    min(val: number): VerifyParam;
     max(): void;
     equals(val: any): void;
     notEquals(val: any): void;
