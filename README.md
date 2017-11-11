@@ -4,12 +4,14 @@
 
 __THIS MODULE IS UNDER CONSTRUCTION__
 
+TODO:
+
+- How to use with promises
+
 
 # Verifyjs
 
 A simple way to verify parameters in typescript / javascript. 
-
-Most of the time you should be validating your parameters in a function, verifyjs allows you to do this in a clean and simple manner.
 
 ## How to use
 
@@ -20,9 +22,37 @@ let myAge = 33;
 verify(myAge).number().min(18).max(99).isValid();
 ```
 
+__More examples:__
+
+```typescript
+verify({ a: 1 }).equals({ a: 1 }).isValid();
+
+let myAge = 17;
+verify(myAge).min(18).isValidOrThrowError('You need to be at least 18 to drink beer');
+
+// throw a custom error
+verify(myEmail).email().isValidOrThrowError(new Error('Invalid email'));
+
+verify(myPassword).string().min(8).notEquals('password').isValidOrThrowError();
+
+let name = null;
+name = verify(name).isSetOrUseDefault('Unknown');
+
+// specify a parameter name so the error message thrown is useful
+let myAge = '33';
+verify(myAge, 'age').number().isValidOrThrowError();
+// The error that will get thrown will read:
+//   Parameter (age) is not a number
+// Where as, if you did not pass a parameter name, the error message would read:
+//   Parameter is not a number
+
+verify('23').number().isValid(); // will return false
+verify('23').number(true).isValid(); // will return true
+```
+
 ### verify(parameter: any, parameterName?: string)
 
-Everything starts with the verify function. The method accepts two arguments, the first being the parameter you want to verify. The second argument is optional, its the name of the parameter, this helps with returning useful error messages (check the examples below).
+Everything starts with the verify function. This method accepts two arguments, the first being the parameter you want to verify and the second argument is the name of the parameter, this is optional. This helps with returning useful error messages (check the examples below).
 
 ### Chainable validation methods
 
@@ -66,31 +96,30 @@ _The below methods can not be used with the chainable validation methods._
 |isTruthy() | determine if the parameter equals either: "1", >= 1, true, "true" or "yes" |
 |isFalsey() | determine if the parameter equals either: "0", "false", "no", false, < 1, "nil" |
 
+## Use cases:
 
-## Examples:
+Most of the time you should be validating your parameters in a function, verifyjs allows you to do this in a clean and simple manner.
 
 ```typescript
-verify({ a: 1 }).equals({ a: 1 }).isValid();
+class Person {
+  constructor(private name: string, private age: number) {}
 
-let myAge = 17;
-verify(myAge).min(18).isValidOrThrowError('You need to be at least 18 to drink beer');
+  setDetails(name: string, age: number) {
+    verify(name, 'name').isSetOrThrowError();
+    verify(age, 'age').min(0).max(99).isValidOrThrowError();
+    
+    this.name = name;
+    this.age = age;
+  }
+}
 
-// throw a custom error
-verify(myEmail).email().isValidOrThrowError(new Error('Invalid email'));
-
-verify(myPassword).string().min(8).notEquals('password').isValidOrThrowError();
-
-let name = null;
-name = verify(name).isSetOrUseDefault('Unknown');
-
-// specify a parameter name so the error message thrown is useful
-let myAge = '33';
-verify(myAge, 'age').number().isValidOrThrowError();
-// The error that will get thrown will read:
-//   Parameter (age) is not a number
-// Where as, if you did not pass a parameter name, the error message would read:
-//   Parameter is not a number
-
+// somewhere else in your code
+try {
+  let person = new Person();
+  person.setDetails('Nathan', 190);
+} catch(err) {
+  // handle error
+}
 ```
 
 ## Development
