@@ -10,6 +10,20 @@ describe('VerifyParam', () => {
 
 
   /**
+   * constructor()
+   */
+  describe('constructor()', () => {
+    it('should set variables', () => {
+      let verifyParam = new VerifyParam(33, 'age');
+      expect(verifyParam['paramName'].length).toBeGreaterThan(0);
+      expect(verifyParam['parameterSrv']).toBeDefined();
+      expect(verifyParam['equalSrv']).toBeDefined();
+      expect(verifyParam['param']).toBeDefined();
+    });
+  });
+
+
+  /**
    * isDefined()
    */
   describe('isDefined()', () => {
@@ -165,6 +179,13 @@ describe('VerifyParam', () => {
       let verifyParam6 = new VerifyParam(100);
       expect(verifyParam6.isTruthy()).toEqual(true);
     });
+
+    it('should return false', () => {
+      let verifyParam = new VerifyParam('0');
+      expect(verifyParam.isTruthy()).toEqual(false);
+      let verifyParam1 = new VerifyParam(null);
+      expect(verifyParam1.isTruthy()).toEqual(false);
+    });
   });
 
 
@@ -187,6 +208,17 @@ describe('VerifyParam', () => {
       expect(verifyParam5.isFalsey()).toEqual(true);
       let verifyParam6 = new VerifyParam('nil');
       expect(verifyParam6.isFalsey()).toEqual(true);
+      let verifyParam7 = new VerifyParam(null);
+      expect(verifyParam7.isFalsey()).toEqual(true);
+      let verifyParam8 = new VerifyParam(undefined);
+      expect(verifyParam8.isFalsey()).toEqual(true);
+    });
+
+    it('should return false', () => {
+      let verifyParam = new VerifyParam('1');
+      expect(verifyParam.isFalsey()).toEqual(false);
+      let verifyParam1 = new VerifyParam(true);
+      expect(verifyParam1.isFalsey()).toEqual(false);
     });
   });
 
@@ -376,6 +408,122 @@ describe('VerifyParam', () => {
     it('should return false as the parameter does not meet the minimum value', () => {
       let verifyParam = new VerifyParam("password");
       expect(verifyParam.min(15).isValid()).toEqual(false);
+      let verifyParam1 = new VerifyParam(null);
+      expect(verifyParam1.min(15).isValid()).toEqual(false);
+    });
+  });
+
+
+  /**
+   * max()
+   */
+  describe('max()', () => {
+    it('should return true as the parameter does not exceed the max value', () => {
+      let verifyParam = new VerifyParam("password");
+      expect(verifyParam.max(15).isValid()).toEqual(true);
+    });
+
+    it('should return false as the parameter exceeds the max value', () => {
+      let verifyParam = new VerifyParam("password");
+      expect(verifyParam.max(5).isValid()).toEqual(false);
+      let verifyParam1 = new VerifyParam(null);
+      expect(verifyParam1.max(5).isValid()).toEqual(false);
+    });
+  });
+
+
+  /**
+   * equals()
+   */
+  describe('equals()', () => {
+    it('should return true as the parameter and value are equal', () => {
+      let verifyParam = new VerifyParam("password");
+      expect(verifyParam.equals('password').isValid()).toEqual(true);
+    });
+
+    it('should return false as the parameter and value are not equal', () => {
+      let verifyParam = new VerifyParam("passworda1");
+      expect(verifyParam.equals('password').isValid()).toEqual(false);
+      let verifyParam1 = new VerifyParam(null);
+      expect(verifyParam1.equals('password').isValid()).toEqual(false);
+    });
+  });
+
+
+  /**
+   * notEquals()
+   */
+  describe('notEquals()', () => {
+    it('should return true as the parameter and value are not equal', () => {
+      let verifyParam = new VerifyParam("password");
+      expect(verifyParam.notEquals('password12').isValid()).toEqual(true);
+    });
+
+    it('should return false as the parameter and value are equal', () => {
+      let verifyParam = new VerifyParam("password");
+      expect(verifyParam.notEquals('password').isValid()).toEqual(false);
+      let verifyParam1 = new VerifyParam(undefined);
+      expect(verifyParam1.notEquals('password').isValid()).toEqual(false);
+    });
+  });
+
+
+  /**
+   * lengthEquals()
+   */
+  describe('lengthEquals()', () => {
+    it('should return true', () => {
+      let verifyParam = new VerifyParam("password");
+      expect(verifyParam.lengthEquals(8).isValid()).toEqual(true);
+    });
+
+    it('should return false', () => {
+      let verifyParam = new VerifyParam("password");
+      expect(verifyParam.lengthEquals(10).isValid()).toEqual(false);
+      let verifyParam1 = new VerifyParam(null);
+      expect(verifyParam1.lengthEquals(10).isValid()).toEqual(false);
+    });
+  });
+
+
+  /**
+   * empty()
+   */
+  describe('empty()', () => {
+    it('should return true', () => {
+      let verifyParam = new VerifyParam([]);
+      expect(verifyParam.empty().isValid()).toEqual(true);
+    });
+
+    it('should return false', () => {
+      let verifyParam = new VerifyParam("df");
+      expect(verifyParam.empty().isValid()).toEqual(false);
+    });
+  });
+
+
+  /**
+   * notEmpty()
+   */
+  describe('notEmpty()', () => {
+    it('should return true', () => {
+      let verifyParam = new VerifyParam([1,2]);
+      expect(verifyParam.notEmpty().isValid()).toEqual(true);
+      let verifyParam1 = new VerifyParam("12");
+      expect(verifyParam1.notEmpty().isValid()).toEqual(true);
+      let verifyParam2 = new VerifyParam({ a: 2 });
+      expect(verifyParam2.notEmpty().isValid()).toEqual(true);
+    });
+
+    it('should return false', () => {
+      let verifyParam = new VerifyParam("");
+      expect(verifyParam.notEmpty().isValid()).toEqual(false);
+      let verifyParam1 = new VerifyParam([]);
+      expect(verifyParam1.notEmpty().isValid()).toEqual(false);
+      let verifyParam2 = new VerifyParam({});
+      expect(verifyParam2.notEmpty().isValid()).toEqual(false);
+      let verifyParam3 = new VerifyParam("");
+      expect(verifyParam3.string().notEmpty().isValid()).toEqual(false);
     });
   });
 

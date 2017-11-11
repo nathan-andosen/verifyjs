@@ -27,10 +27,10 @@ export declare class VerifyParam {
     json(): VerifyParam;
     email(): VerifyParam;
     min(val: number): VerifyParam;
-    max(): void;
-    equals(val: any): void;
-    notEquals(val: any): void;
-    lengthEquals(val: number): void;
-    empty(): void;
-    notEmpty(): void;
+    max(val: number): VerifyParam;
+    equals(val: any): VerifyParam;
+    notEquals(val: any): VerifyParam;
+    lengthEquals(val: number): VerifyParam;
+    empty(): VerifyParam;
+    notEmpty(): VerifyParam;
 }

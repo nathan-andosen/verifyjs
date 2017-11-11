@@ -119,6 +119,23 @@ var ParameterService = (function () {
         }
         return (typeof param === "boolean");
     };
+    ParameterService.prototype.isEmpty = function (param) {
+        if (!this.isSet(param)) {
+            return false;
+        }
+        var dataType = this.getDataType(param);
+        if (dataType === ParameterDataType.String && param.length === 0) {
+            return true;
+        }
+        else if (dataType === ParameterDataType.Json) {
+            return (Object.keys(param).length === 0 &&
+                JSON.stringify(param) === JSON.stringify({}));
+        }
+        else if (dataType === ParameterDataType.Array && param.length === 0) {
+            return true;
+        }
+        return false;
+    };
     return ParameterService;
 }());
 exports.ParameterService = ParameterService;

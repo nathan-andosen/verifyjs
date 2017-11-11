@@ -200,4 +200,26 @@ export class ParameterService {
     if(!this.isSet(param)) { return false; }
     return (typeof param === "boolean");
   }
+
+
+  /**
+   * Determine if the parameter is empty
+   * 
+   * @param {*} param 
+   * @returns {boolean} 
+   * @memberof ParameterService
+   */
+  isEmpty(param: any): boolean {
+    if(!this.isSet(param)) { return false; }
+    let dataType = this.getDataType(param);
+    if(dataType === ParameterDataType.String && param.length === 0) {
+      return true;
+    } else if(dataType === ParameterDataType.Json) {
+      return (Object.keys(param).length === 0 && 
+        JSON.stringify(param) === JSON.stringify({}));
+    } else if(dataType === ParameterDataType.Array && param.length === 0) {
+      return true;
+    }
+    return false;
+  }
 }

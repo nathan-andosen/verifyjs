@@ -20,4 +20,5 @@ export declare class ParameterService {
     isInt(param: any, allowIntAsString?: boolean): boolean;
     isEmail(param: any): boolean;
     isBoolean(param: any): boolean;
+    isEmpty(param: any): boolean;
 }

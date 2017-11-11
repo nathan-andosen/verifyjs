@@ -198,6 +198,7 @@ export class VerifyParam {
    * @memberof VerifyParam
    */
   isFalsey(): boolean {
+    if(this.isNotSet()) { return true; }
     let val = (this.parameterSrv.isString(this.param)) 
       ? this.param.toLowerCase() : this.param;
     if(val === '0' || val === 'false' || val === 'no' || val === false 
@@ -362,15 +363,103 @@ export class VerifyParam {
   }
 
 
- 
+  /**
+   * Determine if the parameter does not exceed the maximum value
+   * 
+   * @param {number} val 
+   * @returns {VerifyParam} 
+   * @memberof VerifyParam
+   */
+  max(val: number): VerifyParam {
+    if(this.paramIsSet()) {
+      let result = this.equalSrv.paramEqualsMax(this.param, this.paramName, val);
+      if(result instanceof Error) {
+        this.setError(result.message);
+      }
+    }
+    return this;
+  }
 
 
-  max() {}
+  /**
+   * Determine if the parameter equals a value
+   * 
+   * @param {*} val 
+   * @returns {VerifyParam} 
+   * @memberof VerifyParam
+   */
+  equals(val: any): VerifyParam {
+    if(this.paramIsSet()) {
+      let result = this.equalSrv.paramEqualsValue(this.param, this.paramName, val);
+      if(result instanceof Error) {
+        this.setError(result.message);
+      }
+    }
+    return this;
+  }
 
-  equals(val: any) {} // check if the parameter equals a value
-  notEquals(val: any) {}
-  lengthEquals(val: number) {} // check if a string or array length eqauls a value
 
-  empty() {}
-  notEmpty() {}
+  /**
+   * Determine if the parameter does not equal the value
+   * 
+   * @param {*} val 
+   * @returns {VerifyParam} 
+   * @memberof VerifyParam
+   */
+  notEquals(val: any): VerifyParam {
+    if(this.paramIsSet()) {
+      let result = this.equalSrv.paramEqualsValue(this.param, this.paramName, val);
+      if(result === true) {
+        this.setError('Parameter' + this.paramName + ' is equal to the value');
+      }
+    }
+    return this;
+  }
+
+
+  /**
+   * Determine if the parameter length equals the value
+   * 
+   * @param {number} val 
+   * @returns {VerifyParam} 
+   * @memberof VerifyParam
+   */
+  lengthEquals(val: number): VerifyParam {
+    if(this.paramIsSet()) {
+      let result = this.equalSrv.paramLengthEquals(this.param, this.paramName, 
+        val);
+      if(result instanceof Error) {
+        this.setError(result.message);
+      }
+    }
+    return this;
+  }
+
+
+  /**
+   * Determine if the parameter is empty
+   * 
+   * @returns {VerifyParam} 
+   * @memberof VerifyParam
+   */
+  empty(): VerifyParam {
+    if(this.paramIsSet() && !this.parameterSrv.isEmpty(this.param)) {
+      this.setError('Parameter' + this.paramName + ' is not empty');
+    } 
+    return this;
+  }
+
+
+  /**
+   * Determine if the parameter is not empty
+   * 
+   * @returns {VerifyParam} 
+   * @memberof VerifyParam
+   */
+  notEmpty(): VerifyParam {
+    if(this.paramIsSet() && this.parameterSrv.isEmpty(this.param)) {
+      this.setError('Parameter' + this.paramName + ' is empty');
+    } 
+    return this;
+  }
 }

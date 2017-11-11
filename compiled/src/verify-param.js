@@ -83,6 +83,9 @@ var VerifyParam = (function () {
         return false;
     };
     VerifyParam.prototype.isFalsey = function () {
+        if (this.isNotSet()) {
+            return true;
+        }
         var val = (this.parameterSrv.isString(this.param))
             ? this.param.toLowerCase() : this.param;
         if (val === '0' || val === 'false' || val === 'no' || val === false
@@ -160,12 +163,54 @@ var VerifyParam = (function () {
         }
         return this;
     };
-    VerifyParam.prototype.max = function () { };
-    VerifyParam.prototype.equals = function (val) { };
-    VerifyParam.prototype.notEquals = function (val) { };
-    VerifyParam.prototype.lengthEquals = function (val) { };
-    VerifyParam.prototype.empty = function () { };
-    VerifyParam.prototype.notEmpty = function () { };
+    VerifyParam.prototype.max = function (val) {
+        if (this.paramIsSet()) {
+            var result = this.equalSrv.paramEqualsMax(this.param, this.paramName, val);
+            if (result instanceof Error) {
+                this.setError(result.message);
+            }
+        }
+        return this;
+    };
+    VerifyParam.prototype.equals = function (val) {
+        if (this.paramIsSet()) {
+            var result = this.equalSrv.paramEqualsValue(this.param, this.paramName, val);
+            if (result instanceof Error) {
+                this.setError(result.message);
+            }
+        }
+        return this;
+    };
+    VerifyParam.prototype.notEquals = function (val) {
+        if (this.paramIsSet()) {
+            var result = this.equalSrv.paramEqualsValue(this.param, this.paramName, val);
+            if (result === true) {
+                this.setError('Parameter' + this.paramName + ' is equal to the value');
+            }
+        }
+        return this;
+    };
+    VerifyParam.prototype.lengthEquals = function (val) {
+        if (this.paramIsSet()) {
+            var result = this.equalSrv.paramLengthEquals(this.param, this.paramName, val);
+            if (result instanceof Error) {
+                this.setError(result.message);
+            }
+        }
+        return this;
+    };
+    VerifyParam.prototype.empty = function () {
+        if (this.paramIsSet() && !this.parameterSrv.isEmpty(this.param)) {
+            this.setError('Parameter' + this.paramName + ' is not empty');
+        }
+        return this;
+    };
+    VerifyParam.prototype.notEmpty = function () {
+        if (this.paramIsSet() && this.parameterSrv.isEmpty(this.param)) {
+            this.setError('Parameter' + this.paramName + ' is empty');
+        }
+        return this;
+    };
     return VerifyParam;
 }());
 exports.VerifyParam = VerifyParam;

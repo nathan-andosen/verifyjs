@@ -10,4 +10,9 @@ export declare class EqualService {
     private stringMin(param, paramName, val);
     private arrayMin(param, paramName, val);
     private numberMin(param, paramName, val);
+    paramEqualsMax(param: any, paramName: string, val: number): boolean | Error;
+    private stringMax(param, paramName, val);
+    private arrayMax(param, paramName, val);
+    private numberMax(param, paramName, val);
+    paramLengthEquals(param: any, paramName: string, val: number): boolean | Error;
 }

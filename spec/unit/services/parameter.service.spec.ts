@@ -277,4 +277,29 @@ describe('Parameter', () => {
     });
   });
 
+
+  /**
+   * isEmpty()
+   */
+  describe('isEmpty()', () => {
+    it('should return true', () => {
+      let parameterSrv = new ParameterService();
+      expect(parameterSrv.isEmpty("")).toEqual(true);
+      expect(parameterSrv.isEmpty([])).toEqual(true);
+      expect(parameterSrv.isEmpty({})).toEqual(true);
+    });
+
+    it('should return false', () => {
+      let parameterSrv = new ParameterService();
+      expect(parameterSrv.isEmpty("abc")).toEqual(false);
+      expect(parameterSrv.isEmpty([1,2])).toEqual(false);
+      expect(parameterSrv.isEmpty({ a: 1 })).toEqual(false);
+      expect(parameterSrv.isEmpty(null)).toEqual(false);
+      expect(parameterSrv.isEmpty(undefined)).toEqual(false);
+      expect(parameterSrv.isEmpty(false)).toEqual(false);
+      expect(parameterSrv.isEmpty(true)).toEqual(false);
+      expect(parameterSrv.isEmpty(new function(){})).toEqual(false);
+    });
+  }); 
+
 });

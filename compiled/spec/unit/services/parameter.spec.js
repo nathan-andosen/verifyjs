@@ -204,5 +204,24 @@ describe('Parameter', function () {
             expect(parameterSrv.isBoolean(1)).toEqual(false);
         });
     });
+    describe('isEmpty()', function () {
+        it('should return true', function () {
+            var parameterSrv = new parameter_service_1.ParameterService();
+            expect(parameterSrv.isEmpty("")).toEqual(true);
+            expect(parameterSrv.isEmpty([])).toEqual(true);
+            expect(parameterSrv.isEmpty({})).toEqual(true);
+        });
+        it('should return false', function () {
+            var parameterSrv = new parameter_service_1.ParameterService();
+            expect(parameterSrv.isEmpty("abc")).toEqual(false);
+            expect(parameterSrv.isEmpty([1, 2])).toEqual(false);
+            expect(parameterSrv.isEmpty({ a: 1 })).toEqual(false);
+            expect(parameterSrv.isEmpty(null)).toEqual(false);
+            expect(parameterSrv.isEmpty(undefined)).toEqual(false);
+            expect(parameterSrv.isEmpty(false)).toEqual(false);
+            expect(parameterSrv.isEmpty(true)).toEqual(false);
+            expect(parameterSrv.isEmpty(new function () { })).toEqual(false);
+        });
+    });
 });
 //# sourceMappingURL=parameter.spec.js.map

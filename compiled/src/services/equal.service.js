@@ -9,7 +9,7 @@ var EqualService = (function () {
     }
     EqualService.prototype.paramEqualsValue = function (param, paramName, val) {
         if (!this.parameterSrv.isSet(param) || this.parameterSrv.isString(param)
-            || this.parameterSrv.isNumber(param)) {
+            || this.parameterSrv.isNumber(param) || this.parameterSrv.isBoolean(param)) {
             return this.binaryEquals(param, paramName, val);
         }
         else if (this.parameterSrv.isArray(param)) {
@@ -20,8 +20,9 @@ var EqualService = (function () {
         }
         else {
             return new Error('Equal validation can only be used on data types: ' +
-                'undefined, null, string, number, array or json. The parameter being ' +
-                'evaluated is of type: ' + this.parameterSrv.getDataTypeAsString(param));
+                'undefined, null, string, number, boolean, array or json. ' +
+                ' The parameter being evaluated is of type: ' +
+                this.parameterSrv.getDataTypeAsString(param));
         }
     };
     EqualService.prototype.binaryEquals = function (param, paramName, val) {
@@ -38,9 +39,6 @@ var EqualService = (function () {
             'supplied array object');
     };
     EqualService.prototype.arraysAreEqual = function (a, b) {
-        if (a === b) {
-            return true;
-        }
         if (a.length !== b.length) {
             return false;
         }
@@ -119,6 +117,60 @@ var EqualService = (function () {
                 'than the minimum value required');
         }
         return true;
+    };
+    EqualService.prototype.paramEqualsMax = function (param, paramName, val) {
+        var dataType = this.parameterSrv.getDataType(param);
+        if (dataType === parameter_service_1.ParameterDataType.String) {
+            return this.stringMax(param, paramName, val);
+        }
+        else if (dataType === parameter_service_1.ParameterDataType.Array) {
+            return this.arrayMax(param, paramName, val);
+        }
+        else if (dataType === parameter_service_1.ParameterDataType.Number) {
+            return this.numberMax(param, paramName, val);
+        }
+        else {
+            return new Error('Parameter' + paramName + ' is not the correct ' +
+                'data type for the max() function, only String, Number and Array are ' +
+                'supported');
+        }
+    };
+    EqualService.prototype.stringMax = function (param, paramName, val) {
+        if (param.length > val) {
+            return new Error('Parameter' + paramName + ' has a length greater ' +
+                'than the maximum value allowed');
+        }
+        return true;
+    };
+    EqualService.prototype.arrayMax = function (param, paramName, val) {
+        if (param.length > val) {
+            return new Error('Parameter' + paramName + ' has an array length ' +
+                'greater than the maximum value allowed');
+        }
+        return true;
+    };
+    EqualService.prototype.numberMax = function (param, paramName, val) {
+        if (param > val) {
+            return new Error('Parameter' + paramName + ' has a value greater ' +
+                'than the maximum value allowed');
+        }
+        return true;
+    };
+    EqualService.prototype.paramLengthEquals = function (param, paramName, val) {
+        var dataType = this.parameterSrv.getDataType(param);
+        if (dataType === parameter_service_1.ParameterDataType.String
+            || dataType === parameter_service_1.ParameterDataType.Array) {
+            if (param.length === val) {
+                return true;
+            }
+            else {
+                return new Error('Parameter' + paramName + ' length does not equal '
+                    + val);
+            }
+        }
+        return new Error('Parameter' + paramName + ' is not the correct ' +
+            'data type for the lengthEquals() function, only String and Array are ' +
+            'supported');
     };
     return EqualService;
 }());
