@@ -11,7 +11,7 @@ module.exports = {
   },
   output: {
     path: path.join(__dirname, "dist"),
-    filename: "verify.js",
+    filename: "verify.min.js",
     libraryTarget: 'umd'
   },
   resolve: {
@@ -33,11 +33,11 @@ if (process.env.NODE_ENV === 'production') {
         NODE_ENV: '"production"'
       }
     }),
-    // new webpack.optimize.UglifyJsPlugin({
-    //   compress: {
-    //     warnings: false
-    //   }
-    // }),
+    new webpack.optimize.UglifyJsPlugin({
+      compress: {
+        warnings: false
+      }
+    }),
     new webpack.BannerPlugin(banner),
     new webpack.optimize.OccurrenceOrderPlugin()
   ]

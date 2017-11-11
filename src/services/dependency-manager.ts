@@ -1,6 +1,10 @@
 
 /**
- * Simple class to handle dependency injection
+ * Simple class to handle dependency injection.
+ * 
+ * We add dependencies using names and fetch the dependencies by name, we use
+ * a name so that when the library gets minified, nothing breaks. If you add
+ * by type and get by type, it wont work when the library gets minified.
  * 
  * @export
  * @class DependencyManager
@@ -31,7 +35,7 @@ export class DependencyManager {
    * @returns {T} 
    * @memberof DependencyManager
    */
-  private getByName<T = any>(name: string): T {
+  public getByName<T = any>(name: string): T {
     return this.services[name];
   }
 
@@ -44,25 +48,12 @@ export class DependencyManager {
    */
   add(...serviceClasses: any[]) {
     serviceClasses.forEach((serviceClass) => {
-      let service = serviceClass;
+      let service = serviceClass.service;
       if (service instanceof Function) {
-        service = new serviceClass();
+        service = new serviceClass.service();
       }
-      this.addByName(service.constructor.name, service);
+      this.addByName(serviceClass.name, service);
     });
-  }
-
-
-  /**
-   * Get a service / dependency by type
-   * 
-   * @template T 
-   * @param {new (...args: any[]) => T} c 
-   * @returns {T} 
-   * @memberof DependencyManager
-   */
-  get<T>(c: new (...args: any[]) => T): T {
-    return this.getByName<T>(c['name'].toLowerCase());
   }
 
 

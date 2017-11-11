@@ -1,0 +1,36 @@
+export declare class VerifyParam {
+    private parameterSrv;
+    private equalSrv;
+    private param;
+    private paramName;
+    private paramSet;
+    private validationErrorMsg;
+    constructor(parameter: any, parameterName?: string);
+    private paramIsSet();
+    private setError(msg);
+    isDefined(): boolean;
+    isDefinedOrThrowError(err?: any): boolean;
+    isNotDefined(): boolean;
+    isSet(): boolean;
+    isNotSet(): boolean;
+    isSetOrThrowError(err?: any): boolean;
+    isSetOrUseDefault(defaultVal: any): any;
+    isTruthy(): boolean;
+    isFalsey(): boolean;
+    isValid(): boolean;
+    isNotValid(): boolean;
+    isValidOrThrowError(err?: any): boolean;
+    string(): VerifyParam;
+    array(): VerifyParam;
+    number(allowNumberAsString?: boolean): VerifyParam;
+    int(allowIntAsString?: boolean): VerifyParam;
+    json(): VerifyParam;
+    email(): VerifyParam;
+    min(val: number): VerifyParam;
+    max(val: number): VerifyParam;
+    equals(val: any): VerifyParam;
+    notEquals(val: any): VerifyParam;
+    lengthEquals(val: number): VerifyParam;
+    empty(): VerifyParam;
+    notEmpty(): VerifyParam;
+}

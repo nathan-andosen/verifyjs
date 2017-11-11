@@ -7,7 +7,7 @@ import { EqualService } from './services/equal.service';
 export let setupDependencies = () => {
   dependencyManager.clear();
   dependencyManager.add(
-    ParameterService, 
-    EqualService
+    { name: 'ParameterService', service: ParameterService }, 
+    { name: 'EqualService', service: EqualService }
   );
 };

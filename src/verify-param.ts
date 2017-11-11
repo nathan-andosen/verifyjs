@@ -29,8 +29,8 @@ export class VerifyParam {
    * @memberof VerifyParam
    */
   constructor(parameter: any, parameterName?: string) {
-    this.parameterSrv = dependencyManager.get(ParameterService);
-    this.equalSrv = dependencyManager.get(EqualService);
+    this.parameterSrv = dependencyManager.getByName('ParameterService');
+    this.equalSrv = dependencyManager.getByName('EqualService');
     this.param = parameter;
     this.paramName = (parameterName) ? ' (' + parameterName + ')' : '';
   }

@@ -5,9 +5,26 @@
 __THIS MODULE IS UNDER CONSTRUCTION__
 
 
-## Verifyjs
+# Verifyjs
 
-A simple way to verify parameters in typescript / javascript
+A simple way to verify parameters in typescript / javascript. 
+
+Most of the time you should be validating your parameters in a function, verifyjs allows you to do this in a clean and simple manner.
+
+## How to use
+
+```typescript
+import { verify } from 'verifyjs';
+
+class Person {
+  goToThePub(age: number, howLong: number) {
+    verify(age).min(18).isValidOrThrowError();
+    let duration = (verify(howLong).isSet()) ? howLong + " hours" : "a long time.";
+    return "I'm going to the pub for " + duration;
+  }
+}
+```
+
 
 
 ## Development

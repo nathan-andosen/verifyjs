@@ -17,7 +17,7 @@ export class EqualService {
    * @memberof EqualService
    */
   constructor() {
-    this.parameterSrv = dependencyManager.get(ParameterService);
+    this.parameterSrv = dependencyManager.getByName('ParameterService');
   }
 
 

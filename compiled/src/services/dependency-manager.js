@@ -18,15 +18,12 @@ var DependencyManager = (function () {
             serviceClasses[_i] = arguments[_i];
         }
         serviceClasses.forEach(function (serviceClass) {
-            var service = serviceClass;
+            var service = serviceClass.service;
             if (service instanceof Function) {
-                service = new serviceClass();
+                service = new serviceClass.service();
             }
-            _this.addByName(service.constructor.name, service);
+            _this.addByName(serviceClass.name, service);
         });
-    };
-    DependencyManager.prototype.get = function (c) {
-        return this.getByName(c['name'].toLowerCase());
     };
     DependencyManager.prototype.clear = function () {
         this.services = {};

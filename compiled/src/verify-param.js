@@ -1,14 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var dependency_manager_1 = require("./services/dependency-manager");
-var parameter_service_1 = require("./services/parameter.service");
-var equal_service_1 = require("./services/equal.service");
 var VerifyParam = (function () {
     function VerifyParam(parameter, parameterName) {
         this.paramSet = null;
         this.validationErrorMsg = null;
-        this.parameterSrv = dependency_manager_1.dependencyManager.get(parameter_service_1.ParameterService);
-        this.equalSrv = dependency_manager_1.dependencyManager.get(equal_service_1.EqualService);
+        this.parameterSrv = dependency_manager_1.dependencyManager.getByName('ParameterService');
+        this.equalSrv = dependency_manager_1.dependencyManager.getByName('EqualService');
         this.param = parameter;
         this.paramName = (parameterName) ? ' (' + parameterName + ')' : '';
     }

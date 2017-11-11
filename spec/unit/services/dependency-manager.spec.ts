@@ -36,12 +36,14 @@ describe('DependencyManager', () => {
     it('should add and get dependencies', () => {
       let depOneTest = new DepOne();
       let depTwoTest = new DepTwo();
-      dependencyManager.add(DepOne, DepTwo, new DepThree('test name'));
-      let depOne = dependencyManager.get(DepOne);
+      dependencyManager.add({ name: 'DepOne', service: DepOne}, 
+      { name: 'DepTwo', service: DepTwo}, 
+      { name: 'DepThree', service: new DepThree('test name')});
+      let depOne = dependencyManager.getByName('DepOne');
       expect(depOne.getSomething()).toEqual(depOneTest.getSomething());
-      let depTwo = dependencyManager.get(DepTwo);
+      let depTwo = dependencyManager.getByName('DepTwo');
       expect(depTwo.doSomething()).toEqual(depTwoTest.doSomething());
-      let depThree = dependencyManager.get(DepThree);
+      let depThree = dependencyManager.getByName('DepThree');
       expect(depThree.getName()).toEqual('test name');
       dependencyManager.clear();
     });
@@ -53,11 +55,12 @@ describe('DependencyManager', () => {
    */
   describe('clear()', () => {
     it('should clear all dependencies', () => {
-      dependencyManager.add(DepOne, DepTwo);
-      let depOne = dependencyManager.get(DepOne);
+      dependencyManager.add({ name: 'DepOne', service: DepOne}, 
+      { name: 'DepTwo', service: DepTwo});
+      let depOne = dependencyManager.getByName('DepOne');
       expect(depOne).toBeDefined();
       dependencyManager.clear();
-      let depOneAgain = dependencyManager.get(DepOne);
+      let depOneAgain = dependencyManager.getByName('DepOne');
       expect(depOneAgain).toBeUndefined();
     });
   });

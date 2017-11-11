@@ -5,7 +5,7 @@ var parameter_service_1 = require("./parameter.service");
 var EqualService = (function () {
     function EqualService() {
         this.parameterSrv = null;
-        this.parameterSrv = dependency_manager_1.dependencyManager.get(parameter_service_1.ParameterService);
+        this.parameterSrv = dependency_manager_1.dependencyManager.getByName('ParameterService');
     }
     EqualService.prototype.paramEqualsValue = function (param, paramName, val) {
         if (!this.parameterSrv.isSet(param) || this.parameterSrv.isString(param)

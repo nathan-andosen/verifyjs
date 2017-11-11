@@ -33,4 +33,7 @@ grunt test
 # Create the validator dist minified files
 NODE_ENV=production ./node_modules/.bin/webpack --config webpack.config.js
 
+# Create the validator dist minified files
+NODE_ENV=production ./node_modules/.bin/webpack --config webpack.minified.config.js
+
 rm -rf ./dist/compiled

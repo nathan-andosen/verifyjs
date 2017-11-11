@@ -32,23 +32,23 @@ describe('DependencyManager', function () {
         it('should add and get dependencies', function () {
             var depOneTest = new DepOne();
             var depTwoTest = new DepTwo();
-            dependency_manager_1.dependencyManager.add(DepOne, DepTwo, new DepThree('test name'));
-            var depOne = dependency_manager_1.dependencyManager.get(DepOne);
+            dependency_manager_1.dependencyManager.add({ name: 'DepOne', service: DepOne }, { name: 'DepTwo', service: DepTwo }, { name: 'DepThree', service: new DepThree('test name') });
+            var depOne = dependency_manager_1.dependencyManager.getByName('DepOne');
             expect(depOne.getSomething()).toEqual(depOneTest.getSomething());
-            var depTwo = dependency_manager_1.dependencyManager.get(DepTwo);
+            var depTwo = dependency_manager_1.dependencyManager.getByName('DepTwo');
             expect(depTwo.doSomething()).toEqual(depTwoTest.doSomething());
-            var depThree = dependency_manager_1.dependencyManager.get(DepThree);
+            var depThree = dependency_manager_1.dependencyManager.getByName('DepThree');
             expect(depThree.getName()).toEqual('test name');
             dependency_manager_1.dependencyManager.clear();
         });
     });
     describe('clear()', function () {
         it('should clear all dependencies', function () {
-            dependency_manager_1.dependencyManager.add(DepOne, DepTwo);
-            var depOne = dependency_manager_1.dependencyManager.get(DepOne);
+            dependency_manager_1.dependencyManager.add({ name: 'DepOne', service: DepOne }, { name: 'DepTwo', service: DepTwo });
+            var depOne = dependency_manager_1.dependencyManager.getByName('DepOne');
             expect(depOne).toBeDefined();
             dependency_manager_1.dependencyManager.clear();
-            var depOneAgain = dependency_manager_1.dependencyManager.get(DepOne);
+            var depOneAgain = dependency_manager_1.dependencyManager.getByName('DepOne');
             expect(depOneAgain).toBeUndefined();
         });
     });
