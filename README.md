@@ -16,16 +16,82 @@ Most of the time you should be validating your parameters in a function, verifyj
 ```typescript
 import { verify } from 'verifyjs';
 
-class Person {
-  goToThePub(age: number, howLong: number) {
-    verify(age).min(18).isValidOrThrowError();
-    let duration = (verify(howLong).isSet()) ? howLong + " hours" : "a long time.";
-    return "I'm going to the pub for " + duration;
-  }
-}
+let myAge = 33;
+verify(myAge).number().min(18).max(99).isValid();
 ```
 
+### verify(parameter: any, parameterName?: string)
 
+Everything starts with the verify function. The method accepts two arguments, the first being the parameter you want to verify. The second argument is optional, its the name of the parameter, this helps with returning useful error messages (check the examples below).
+
+### Chainable validation methods
+
+_The chainable validation methods have to be used with __isValid()__, __isNotValid()__ or __isValidOrThrowError()___
+
+|Method | Description
+|-------|-------------|
+|string() | verify the parameter is a string |
+|number(allowNumberAsString: boolean = false) | verify the parameter is a number |
+|int(allowIntAsString: boolean = false) | verify the parameter is an integer |
+|array() | verify the parameter is an array |
+|json() | verify the parameter is a json object |
+|email() | verify the parameter is a valid email address |
+|min(value: number) | verify the parameter meets the minimum value required, can only be used with data types: string, number and array |
+|max(value: number) | verify the parameter does not exceed the maximum allowed value, can only be used with data types: string, number and array |
+|equals(value: any) | verify the parameter eqauls the value |
+|notEquals(value: any) | verify the parameter does not equal the value |
+|lengthEquals(value: number) | verify the parameter length equals the value, can only be used with data types: string and array |
+|empty() | verify the parameter is empty, can only be used with data types: string, array and json |
+|notEmpty() | verify the parameter is not empty, can only be used with data types: string, array and json |
+
+### Methods
+
+|Method | Description |
+|-------|-------------|
+|isValid() | determine if the chainable validation methods evaluate to true |
+|isNotValid() | determine if any of the chainable validation methods evaluate to false |
+|isNotValidOrThrowError(err?: any) | determine if the chainable validation methods evaluate to true, if not, an error is thrown. |
+
+_The below methods can not be used with the chainable validation methods._
+
+|Method | Description |
+|-------|-------------|
+|isDefined() | determine if the parameter is defined (not equal to undefined) |
+|isDefinedOrThrowError(err?: any) | determine if the parameter is defined (not equal to undefined), otherwise throw an error |
+|isNotDefined() | determine if the parameter equals undefined |
+|isSet() | determine if the parameter is set (not equal to undefined or null) |
+|isSetOrThrowError(err?: any) | determine if the parameter is set (not equal to undefined or null), otherwise throw an error |
+|isNotSet() | determine if the parameter is equal to undefined or null |
+|isSetOrUseDefault(defaultValue: any) | determine if the parameter is set, if not, set it to the default value |
+|isTruthy() | determine if the parameter equals either: "1", >= 1, true, "true" or "yes" |
+|isFalsey() | determine if the parameter equals either: "0", "false", "no", false, < 1, "nil" |
+
+
+## Examples:
+
+```typescript
+verify({ a: 1 }).equals({ a: 1 }).isValid();
+
+let myAge = 17;
+verify(myAge).min(18).isValidOrThrowError('You need to be at least 18 to drink beer');
+
+// throw a custom error
+verify(myEmail).email().isValidOrThrowError(new Error('Invalid email'));
+
+verify(myPassword).string().min(8).notEquals('password').isValidOrThrowError();
+
+let name = null;
+name = verify(name).isSetOrUseDefault('Unknown');
+
+// specify a parameter name so the error message thrown is useful
+let myAge = '33';
+verify(myAge, 'age').number().isValidOrThrowError();
+// The error that will get thrown will read:
+//   Parameter (age) is not a number
+// Where as, if you did not pass a parameter name, the error message would read:
+//   Parameter is not a number
+
+```
 
 ## Development
 

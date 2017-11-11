@@ -346,7 +346,8 @@ export class VerifyParam {
 
 
   /**
-   * Determine if the parameter meets the minimum value
+   * Determine if the parameter meets the minimum value. Can only be used 
+   * with String, Number and Array data types
    * 
    * @param {number} val 
    * @returns {VerifyParam} 
@@ -364,7 +365,8 @@ export class VerifyParam {
 
 
   /**
-   * Determine if the parameter does not exceed the maximum value
+   * Determine if the parameter does not exceed the maximum value. Can only be used 
+   * with String, Number and Array data types
    * 
    * @param {number} val 
    * @returns {VerifyParam} 
@@ -437,7 +439,8 @@ export class VerifyParam {
 
 
   /**
-   * Determine if the parameter is empty
+   * Determine if the parameter is empty. Can only be used with data types:
+   * string, json and array
    * 
    * @returns {VerifyParam} 
    * @memberof VerifyParam
