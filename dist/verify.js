@@ -1,5 +1,5 @@
 /*!
- * verifyjs v1.0.0
+ * verifyjs v1.0.1
  * (c) 2017 Nathan Anderson
  */
 (function webpackUniversalModuleDefinition(root, factory) {

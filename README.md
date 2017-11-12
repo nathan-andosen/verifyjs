@@ -1,18 +1,15 @@
 ![Test Coverage-shield-badge-1](https://img.shields.io/badge/Test%20Coverage-100%25-brightgreen.svg)
 
-# Under construction
-
-__THIS MODULE IS UNDER CONSTRUCTION__
-
-
 # Verifyjs
 
 A simple way to verify parameters in typescript / javascript. 
 
 ## How to use
 
+``npm install @thenja/verify --save``
+
 ```typescript
-import { verify } from 'verifyjs';
+import { verify } from '@thenja/verify';
 
 let myAge = 33;
 verify(myAge).number().min(18).max(99).isValid();
