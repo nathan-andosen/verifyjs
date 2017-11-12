@@ -7,6 +7,8 @@ dev/
 .vscode/
 scripts/
 spec/
+coverage/
+.nyc_output/
 coverage.shield.badge.md
 Gruntfile.js
 tsconfig.json
