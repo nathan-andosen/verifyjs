@@ -6,6 +6,23 @@
   <script src="../dist/verify.min.js" type="text/javascript"></script>
   <script type="text/javascript">
     console.log(verify(10).equals(12).isValid());
+
+    var myFunc = function() {
+      return new Promise(function(resolve, reject){
+        verify(10, 'age').equals(11).isValidOrThrowError();
+        resolve('test');
+      });
+    };
+
+
+    myFunc().then(function(msg) {
+      var a = 10;
+      // console.log(msg);
+    }).catch(function(err){
+      var test = 10;
+      // console.log(err);
+    });
+
   </script>
 </head>
 

@@ -3,3 +3,13 @@ debug/
 dist/
 dev-only/
 compiled/spec
+dev/
+.vscode/
+scripts/
+spec/
+coverage.shield.badge.md
+Gruntfile.js
+tsconfig.json
+webpack-unit-tests.config.js
+webpack.config.js
+webpack.minified.config.js

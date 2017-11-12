@@ -4,10 +4,6 @@
 
 __THIS MODULE IS UNDER CONSTRUCTION__
 
-TODO:
-
-- How to use with promises
-
 
 # Verifyjs
 
@@ -98,7 +94,9 @@ _The below methods can not be used with the chainable validation methods._
 
 ## Use cases:
 
-Most of the time you should be validating your parameters in a function, verifyjs allows you to do this in a clean and simple manner.
+Most of the time you should be validating your parameters in a function or parameters passed to an API, verifyjs allows you to do this in a clean and simple manner.
+
+__Validating a methods parameters:__
 
 ```typescript
 class Person {
@@ -120,6 +118,36 @@ try {
 } catch(err) {
   // handle error
 }
+```
+
+__Using with a Promise:__
+
+You can easily use verifyjs inside a promise, any errors thrown inside the Promise will call the catch() method. However, there are a few use cases where it wont work, they are listed below in the typescript code.
+
+```typescript
+let myFunc = () => {
+  return new Promise((resolve, reject) => {
+    verify(null, 'age').isSetOrThrowError();
+    resolve(true);
+  });
+};
+
+myFunc().then(() => {}).catch((err) => {
+  // catch will be called with the thrown error: Parameter (age) is not set.
+});
+
+////////////////////////////
+
+// Errors thrown inside asynchronous functions will act like uncaught errors
+let myFunc = () => {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      // this error will not call the catch() method of the promise
+      verify(null, 'age').isSetOrThrowError();
+      resolve();
+    }, 1000);
+  });
+};
 ```
 
 ## Development

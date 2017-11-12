@@ -1,10 +1,23 @@
 {
-  "name": "node-module-seed",
-  "description": "A repo to kickstart your next typescript node module",
+  "name": "@thenja/verify",
+  "description": "A simple way to verify parameters in typescript / javascript",
   "main": "compiled/src/index.js",
   "types": "compiled/src/index.d.ts",
-  "version": "0.0.2",
-  "private": true,
+  "keywords": [
+    "validate",
+    "verify",
+    "parameters",
+    "arguments"
+  ],
+  "bugs": "https://github.com/nathan-andosen/verifyjs/issues",
+  "homepage": "https://github.com/nathan-andosen/verifyjs",
+  "version": "1.0.0",
+  "license": "MIT",
+  "author": "Nathan Anderson",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nathan-andosen/verifyjs"
+  },
   "dependencies": {},
   "devDependencies": {
     "@types/jasmine": "2.6.0",
