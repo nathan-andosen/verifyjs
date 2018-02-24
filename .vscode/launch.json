@@ -8,7 +8,7 @@
       "type": "node",
       "request": "launch",
       "name": "Launch Unit Tests",
-      "program": "${workspaceRoot}\\scripts\\unit-tests.js",
+      "program": "${workspaceRoot}/scripts/unit-tests.js",
       "preLaunchTask": null,
       "cwd": "${workspaceRoot}",
       "outFiles": [
@@ -18,7 +18,7 @@
 				"NODE_ENV": "tests"
 			},
       "sourceMaps": true,
-			"outDir": "${workspaceRoot}\\compiled"
+			"outDir": "${workspaceRoot}/compiled"
     }
   ]
 }
