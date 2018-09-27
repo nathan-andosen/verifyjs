@@ -111,6 +111,20 @@ var VerifyParam = (function () {
             throw new Error(this.validationErrorMsg);
         }
     };
+    VerifyParam.prototype.type = function (type) {
+        if (this.paramIsSet()) {
+            if (typeof this[type] !== "function")
+                throw new Error('Type: ' + type + ' not supported');
+            return this[type]();
+        }
+        return this;
+    };
+    VerifyParam.prototype.boolean = function () {
+        if (this.paramIsSet() && !this.parameterSrv.isBoolean(this.param)) {
+            this.setError('Parameter' + this.paramName + ' is not a boolean');
+        }
+        return this;
+    };
     VerifyParam.prototype.string = function () {
         if (this.paramIsSet() && !this.parameterSrv.isString(this.param)) {
             this.setError('Parameter' + this.paramName + ' is not a string');

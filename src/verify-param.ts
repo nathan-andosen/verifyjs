@@ -234,6 +234,40 @@ export class VerifyParam {
 
   // CHAINABLE FUNCTIONS BELOW /////////////////////////////////////////////////
 
+
+  /**
+   * Determine if the parameter is of type
+   * Available types:
+   * string, number, int, boolean, array, json, email
+   *
+   * @param {string} type
+   * @returns {VerifyParam}
+   * @memberof VerifyParam
+   */
+  type(type: string): VerifyParam {
+    if(this.paramIsSet()) {
+      if(typeof this[type] !== "function") 
+        throw new Error('Type: ' + type + ' not supported');
+      return this[type]();
+    }
+    return this;
+  }
+
+
+  /**
+   * Determine if the parameter is a boolean
+   *
+   * @returns {VerifyParam}
+   * @memberof VerifyParam
+   */
+  boolean(): VerifyParam {
+    if(this.paramIsSet() && !this.parameterSrv.isBoolean(this.param)) {
+      this.setError('Parameter' + this.paramName + ' is not a boolean');
+    }
+    return this;
+  }
+
+
   /**
    * Determine if the parameter is a string
    * 

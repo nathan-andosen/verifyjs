@@ -286,6 +286,61 @@ describe('VerifyParam', () => {
 
 
   /**
+   * type()
+   */
+  describe('type()', () => {
+    it('should return true for all valid types', () => {
+      let verifyParam = new VerifyParam(false);
+      expect(verifyParam.type('boolean').isValid()).toEqual(true);
+      verifyParam = new VerifyParam("a string");
+      expect(verifyParam.type('string').isValid()).toEqual(true);
+      verifyParam = new VerifyParam(10.2);
+      expect(verifyParam.type('number').isValid()).toEqual(true);
+      verifyParam = new VerifyParam(2);
+      expect(verifyParam.type('int').isValid()).toEqual(true);
+      verifyParam = new VerifyParam([1,2]);
+      expect(verifyParam.type('array').isValid()).toEqual(true);
+      verifyParam = new VerifyParam({});
+      expect(verifyParam.type('json').isValid()).toEqual(true);
+      verifyParam = new VerifyParam({"ab": "cd"});
+      expect(verifyParam.type('json').isValid()).toEqual(true);
+      verifyParam = new VerifyParam("nathan@email.com");
+      expect(verifyParam.type('email').isValid()).toEqual(true);
+    });
+
+    it('should return false as the types are invalid', () => {
+      let verifyParam = new VerifyParam(false);
+      expect(verifyParam.type('string').isValid()).toEqual(false);
+      verifyParam = new VerifyParam("nathanemail.com");
+      expect(verifyParam.type('email').isValid()).toEqual(false);
+      verifyParam = new VerifyParam([]);
+      expect(verifyParam.type('json').isValid()).toEqual(false);
+      verifyParam = new VerifyParam(null);
+      expect(verifyParam.type('json').isValid()).toEqual(false);
+      verifyParam = new VerifyParam(2.3);
+      expect(verifyParam.type('int').isValid()).toEqual(false);
+    });
+  });
+
+
+
+  /**
+   * boolean()
+   */
+  describe('boolean()', () => {
+    it('should return true as the parameter is a boolean', () => {
+      let verifyParam = new VerifyParam(false);
+      expect(verifyParam.boolean().isValid()).toEqual(true);
+    });
+
+    it('should return false as the parameter is not a boolean', () => {
+      let verifyParam = new VerifyParam(1);
+      expect(verifyParam.boolean().isValid()).toEqual(false);
+    });
+  });
+
+
+  /**
    * string()
    */
   describe('string()', () => {
