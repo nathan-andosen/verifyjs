@@ -60,53 +60,11 @@
 /******/ 	__webpack_require__.p = "/dist/";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 5);
+/******/ 	return __webpack_require__(__webpack_require__.s = 4);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var DependencyManager = (function () {
-    function DependencyManager() {
-        this.services = {};
-    }
-    DependencyManager.prototype.addByName = function (name, service) {
-        this.services[name] = service;
-        this.services[name.toLowerCase()] = service;
-    };
-    DependencyManager.prototype.getByName = function (name) {
-        return this.services[name];
-    };
-    DependencyManager.prototype.add = function () {
-        var _this = this;
-        var serviceClasses = [];
-        for (var _i = 0; _i < arguments.length; _i++) {
-            serviceClasses[_i] = arguments[_i];
-        }
-        serviceClasses.forEach(function (serviceClass) {
-            var service = serviceClass.service;
-            if (service instanceof Function) {
-                service = new serviceClass.service();
-            }
-            _this.addByName(serviceClass.name, service);
-        });
-    };
-    DependencyManager.prototype.clear = function () {
-        this.services = {};
-    };
-    return DependencyManager;
-}());
-exports.DependencyManager = DependencyManager;
-var dependencyManager = new DependencyManager();
-exports.dependencyManager = dependencyManager;
-
-
-/***/ }),
-/* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -180,61 +138,51 @@ var ParameterService = (function () {
         return (typeof param !== 'undefined' && param !== null);
     };
     ParameterService.prototype.isJson = function (param) {
-        if (!this.isSet(param)) {
+        if (!this.isSet(param))
             return false;
-        }
         return (param instanceof Object && param.constructor === {}.constructor);
     };
     ParameterService.prototype.isArray = function (param) {
-        if (!this.isSet(param)) {
+        if (!this.isSet(param))
             return false;
-        }
         return (Array.isArray(param));
     };
     ParameterService.prototype.isString = function (param) {
-        if (!this.isSet(param)) {
+        if (!this.isSet(param))
             return false;
-        }
         return (typeof param === 'string' || param instanceof String);
     };
     ParameterService.prototype.isNumber = function (param, allowNumbersAsStrings) {
         if (allowNumbersAsStrings === void 0) { allowNumbersAsStrings = false; }
-        if (!this.isSet(param) || this.isArray(param)) {
+        if (!this.isSet(param) || this.isArray(param))
             return false;
-        }
-        if (this.isString(param) && !allowNumbersAsStrings) {
+        if (this.isString(param) && !allowNumbersAsStrings)
             return false;
-        }
         return (!(isNaN(parseFloat(param)) || !isFinite(param)));
     };
     ParameterService.prototype.isInt = function (param, allowIntAsString) {
         if (allowIntAsString === void 0) { allowIntAsString = false; }
-        if (!this.isSet(param)) {
+        if (!this.isSet(param))
             return false;
-        }
-        if (this.isString(param) && !allowIntAsString) {
+        if (this.isString(param) && !allowIntAsString)
             return false;
-        }
         var x = parseFloat(param);
         return (!(isNaN(param) || !((x | 0) === x)));
     };
     ParameterService.prototype.isEmail = function (param) {
-        if (!this.isSet(param)) {
+        if (!this.isSet(param))
             return false;
-        }
         var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         return (re.test(param));
     };
     ParameterService.prototype.isBoolean = function (param) {
-        if (!this.isSet(param)) {
+        if (!this.isSet(param))
             return false;
-        }
         return (typeof param === "boolean");
     };
     ParameterService.prototype.isEmpty = function (param) {
-        if (!this.isSet(param)) {
+        if (!this.isSet(param))
             return false;
-        }
         var dataType = this.getDataType(param);
         if (dataType === ParameterDataType.String && param.length === 0) {
             return true;
@@ -254,37 +202,25 @@ exports.ParameterService = ParameterService;
 
 
 /***/ }),
-/* 2 */
+/* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-var setup_dependencies_1 = __webpack_require__(9);
-var TestHelper = (function () {
-    function TestHelper() {
-    }
-    TestHelper.prototype.setupDependencyManager = function () {
-        setup_dependencies_1.setupDependencies();
-    };
-    return TestHelper;
-}());
-exports.TestHelper = TestHelper;
-
-
-/***/ }),
-/* 3 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var dependency_manager_1 = __webpack_require__(0);
-var parameter_service_1 = __webpack_require__(1);
+var parameter_service_1 = __webpack_require__(0);
+var DI = __webpack_require__(2);
 var EqualService = (function () {
     function EqualService() {
-        this.parameterSrv = null;
-        this.parameterSrv = dependency_manager_1.dependencyManager.getByName('ParameterService');
     }
     EqualService.prototype.paramEqualsValue = function (param, paramName, val) {
         if (!this.parameterSrv.isSet(param) || this.parameterSrv.isString(param)
@@ -305,28 +241,24 @@ var EqualService = (function () {
         }
     };
     EqualService.prototype.binaryEquals = function (param, paramName, val) {
-        if (param === val) {
+        if (param === val)
             return true;
-        }
         return new Error('Parameter' + paramName + ' does not equal ' + val);
     };
     EqualService.prototype.arrayEquals = function (param, paramName, val) {
-        if (this.parameterSrv.isArray(val) && this.arraysAreEqual(param, val)) {
+        if (this.parameterSrv.isArray(val) && this.arraysAreEqual(param, val))
             return true;
-        }
         return new Error('Parameter' + paramName + ' does not equal the ' +
             'supplied array object');
     };
     EqualService.prototype.arraysAreEqual = function (a, b) {
-        if (a.length !== b.length) {
+        if (a.length !== b.length)
             return false;
-        }
         for (var i = 0; i < a.length; ++i) {
             var aDataType = this.parameterSrv.getDataType(a[i]);
             var bDataType = this.parameterSrv.getDataType(b[i]);
-            if (aDataType !== bDataType) {
+            if (aDataType !== bDataType)
                 return false;
-            }
             switch (aDataType) {
                 case parameter_service_1.ParameterDataType.String:
                 case parameter_service_1.ParameterDataType.Number:
@@ -334,28 +266,24 @@ var EqualService = (function () {
                 case parameter_service_1.ParameterDataType.Null:
                 case parameter_service_1.ParameterDataType.Undefined:
                 case parameter_service_1.ParameterDataType.Unknown:
-                    if (a[i] !== b[i]) {
+                    if (a[i] !== b[i])
                         return false;
-                    }
                     break;
                 case parameter_service_1.ParameterDataType.Array:
-                    if (!this.arraysAreEqual(a[i], b[i])) {
+                    if (!this.arraysAreEqual(a[i], b[i]))
                         return false;
-                    }
                     break;
                 case parameter_service_1.ParameterDataType.Json:
-                    if (JSON.stringify(a[i]) !== JSON.stringify(b[i])) {
+                    if (JSON.stringify(a[i]) !== JSON.stringify(b[i]))
                         return false;
-                    }
                     break;
             }
         }
         return true;
     };
     EqualService.prototype.jsonEquals = function (param, paramName, val) {
-        if (JSON.stringify(param) === JSON.stringify(val)) {
+        if (JSON.stringify(param) === JSON.stringify(val))
             return true;
-        }
         return new Error('Parameter' + paramName + ' does not equal the ' +
             'supplied json object');
     };
@@ -377,24 +305,21 @@ var EqualService = (function () {
         }
     };
     EqualService.prototype.stringMin = function (param, paramName, val) {
-        if (param.length < val) {
+        if (param.length < val)
             return new Error('Parameter' + paramName + ' has a length less ' +
                 'than the minimum value required');
-        }
         return true;
     };
     EqualService.prototype.arrayMin = function (param, paramName, val) {
-        if (param.length < val) {
+        if (param.length < val)
             return new Error('Parameter' + paramName + ' has an array length less ' +
                 'than the minimum value required');
-        }
         return true;
     };
     EqualService.prototype.numberMin = function (param, paramName, val) {
-        if (param < val) {
+        if (param < val)
             return new Error('Parameter' + paramName + ' has a value less ' +
                 'than the minimum value required');
-        }
         return true;
     };
     EqualService.prototype.paramEqualsMax = function (param, paramName, val) {
@@ -415,68 +340,110 @@ var EqualService = (function () {
         }
     };
     EqualService.prototype.stringMax = function (param, paramName, val) {
-        if (param.length > val) {
+        if (param.length > val)
             return new Error('Parameter' + paramName + ' has a length greater ' +
                 'than the maximum value allowed');
-        }
         return true;
     };
     EqualService.prototype.arrayMax = function (param, paramName, val) {
-        if (param.length > val) {
+        if (param.length > val)
             return new Error('Parameter' + paramName + ' has an array length ' +
                 'greater than the maximum value allowed');
-        }
         return true;
     };
     EqualService.prototype.numberMax = function (param, paramName, val) {
-        if (param > val) {
+        if (param > val)
             return new Error('Parameter' + paramName + ' has a value greater ' +
                 'than the maximum value allowed');
-        }
         return true;
     };
     EqualService.prototype.paramLengthEquals = function (param, paramName, val) {
         var dataType = this.parameterSrv.getDataType(param);
         if (dataType === parameter_service_1.ParameterDataType.String
             || dataType === parameter_service_1.ParameterDataType.Array) {
-            if (param.length === val) {
+            if (param.length === val)
                 return true;
-            }
-            else {
-                return new Error('Parameter' + paramName + ' length does not equal '
-                    + val);
-            }
+            return new Error('Parameter' + paramName + ' length does not equal '
+                + val);
         }
         return new Error('Parameter' + paramName + ' is not the correct ' +
             'data type for the lengthEquals() function, only String and Array are ' +
             'supported');
     };
+    __decorate([
+        DI.Inject(parameter_service_1.ParameterService, 'ParameterService'),
+        __metadata("design:type", parameter_service_1.ParameterService)
+    ], EqualService.prototype, "parameterSrv", void 0);
     return EqualService;
 }());
 exports.EqualService = EqualService;
 
 
 /***/ }),
-/* 4 */
+/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var dependency_manager_1 = __webpack_require__(0);
+var dependencyContainer = {};
+function Inject(service, serviceName) {
+    return function (target, propName) {
+        Object.defineProperty(target, propName, {
+            get: function () {
+                var name = (serviceName) ? serviceName : service.name;
+                if (!dependencyContainer[name]) {
+                    dependencyContainer[name] = new service();
+                }
+                return dependencyContainer[name];
+            }
+        });
+    };
+}
+exports.Inject = Inject;
+function override(serviceName, dependencyInstance) {
+    dependencyContainer[serviceName] = dependencyInstance;
+}
+exports.override = override;
+function getService(service, serviceName) {
+    var name = (serviceName) ? serviceName : service.name;
+    if (!dependencyContainer[name] && service) {
+        dependencyContainer[name] = new service();
+    }
+    return dependencyContainer[name];
+}
+exports.getService = getService;
+
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var parameter_service_1 = __webpack_require__(0);
+var equal_service_1 = __webpack_require__(1);
+var DI = __webpack_require__(2);
 var VerifyParam = (function () {
     function VerifyParam(parameter, parameterName) {
         this.paramSet = null;
         this.validationErrorMsg = null;
-        this.parameterSrv = dependency_manager_1.dependencyManager.getByName('ParameterService');
-        this.equalSrv = dependency_manager_1.dependencyManager.getByName('EqualService');
         this.param = parameter;
         this.paramName = (parameterName) ? ' (' + parameterName + ')' : '';
     }
     VerifyParam.prototype.paramIsSet = function () {
-        if (this.paramSet !== null) {
+        if (this.paramSet !== null)
             return this.paramSet;
-        }
         if (this.parameterSrv.isSet(this.param)) {
             this.paramSet = true;
             return true;
@@ -492,13 +459,11 @@ var VerifyParam = (function () {
         return this.parameterSrv.isDefined(this.param);
     };
     VerifyParam.prototype.isDefinedOrThrowError = function (err) {
-        if (this.isDefined()) {
+        if (this.isDefined())
             return true;
-        }
         if (err) {
-            if (this.parameterSrv.isString(err)) {
+            if (this.parameterSrv.isString(err))
                 throw new Error(err);
-            }
             throw err;
         }
         else {
@@ -515,13 +480,11 @@ var VerifyParam = (function () {
         return (!this.isSet());
     };
     VerifyParam.prototype.isSetOrThrowError = function (err) {
-        if (this.isSet()) {
+        if (this.isSet())
             return true;
-        }
         if (err) {
-            if (this.parameterSrv.isString(err)) {
+            if (this.parameterSrv.isString(err))
                 throw new Error(err);
-            }
             throw err;
         }
         else {
@@ -529,18 +492,16 @@ var VerifyParam = (function () {
         }
     };
     VerifyParam.prototype.isSetOrUseDefault = function (defaultVal) {
-        if (!this.paramIsSet()) {
+        if (!this.paramIsSet())
             return defaultVal;
-        }
         return this.param;
     };
     VerifyParam.prototype.isTruthy = function () {
         var val = (this.parameterSrv.isString(this.param))
             ? this.param.toLowerCase() : this.param;
         if (val && (val === '1' || val >= 1 || val === true || val === 'true'
-            || val === 'yes')) {
+            || val === 'yes'))
             return true;
-        }
         return false;
     };
     VerifyParam.prototype.isFalsey = function () {
@@ -550,9 +511,8 @@ var VerifyParam = (function () {
         var val = (this.parameterSrv.isString(this.param))
             ? this.param.toLowerCase() : this.param;
         if (val === '0' || val === 'false' || val === 'no' || val === false
-            || val < 1 || val === 'nil') {
+            || val < 1 || val === 'nil')
             return true;
-        }
         return false;
     };
     VerifyParam.prototype.isValid = function () {
@@ -562,13 +522,11 @@ var VerifyParam = (function () {
         return (!this.isValid());
     };
     VerifyParam.prototype.isValidOrThrowError = function (err) {
-        if (this.isValid()) {
+        if (this.isValid())
             return true;
-        }
         if (err) {
-            if (this.parameterSrv.isString(err)) {
+            if (this.parameterSrv.isString(err))
                 throw new Error(err);
-            }
             throw err;
         }
         else {
@@ -672,13 +630,21 @@ var VerifyParam = (function () {
         }
         return this;
     };
+    __decorate([
+        DI.Inject(parameter_service_1.ParameterService, 'ParameterService'),
+        __metadata("design:type", parameter_service_1.ParameterService)
+    ], VerifyParam.prototype, "parameterSrv", void 0);
+    __decorate([
+        DI.Inject(equal_service_1.EqualService, 'EqualService'),
+        __metadata("design:type", equal_service_1.EqualService)
+    ], VerifyParam.prototype, "equalSrv", void 0);
     return VerifyParam;
 }());
 exports.VerifyParam = VerifyParam;
 
 
 /***/ }),
-/* 5 */
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
@@ -686,20 +652,20 @@ exports.VerifyParam = VerifyParam;
 // so they can be tested in a browser for debugging
 
 // require all test files
-var testsContext = __webpack_require__(6);
+var testsContext = __webpack_require__(5);
 testsContext.keys().forEach(testsContext);
 
 
 /***/ }),
-/* 6 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
-	"./services/dependency-manager.spec": 7,
-	"./services/equal.service.spec": 8,
-	"./services/parameter.service.spec": 10,
-	"./verify-param.spec": 11,
-	"./verify.spec": 12
+	"./services/dependency-manager.spec": 6,
+	"./services/equal.service.spec": 7,
+	"./services/parameter.service.spec": 8,
+	"./verify-param.spec": 9,
+	"./verify.spec": 10
 };
 function webpackContext(req) {
 	return __webpack_require__(webpackContextResolve(req));
@@ -715,7 +681,13 @@ webpackContext.keys = function webpackContextKeys() {
 };
 webpackContext.resolve = webpackContextResolve;
 module.exports = webpackContext;
-webpackContext.id = 6;
+webpackContext.id = 5;
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports) {
+
+
 
 /***/ }),
 /* 7 */
@@ -724,75 +696,10 @@ webpackContext.id = 6;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var dependency_manager_1 = __webpack_require__(0);
-var DepOne = (function () {
-    function DepOne() {
-    }
-    DepOne.prototype.getSomething = function () {
-        return 'Got something';
-    };
-    return DepOne;
-}());
-var DepTwo = (function () {
-    function DepTwo() {
-    }
-    DepTwo.prototype.doSomething = function () {
-        return 'Did something';
-    };
-    return DepTwo;
-}());
-var DepThree = (function () {
-    function DepThree(name) {
-        this.name = '';
-        this.name = name;
-    }
-    DepThree.prototype.getName = function () {
-        return this.name;
-    };
-    return DepThree;
-}());
-describe('DependencyManager', function () {
-    describe('add() & get()', function () {
-        it('should add and get dependencies', function () {
-            var depOneTest = new DepOne();
-            var depTwoTest = new DepTwo();
-            dependency_manager_1.dependencyManager.add({ name: 'DepOne', service: DepOne }, { name: 'DepTwo', service: DepTwo }, { name: 'DepThree', service: new DepThree('test name') });
-            var depOne = dependency_manager_1.dependencyManager.getByName('DepOne');
-            expect(depOne.getSomething()).toEqual(depOneTest.getSomething());
-            var depTwo = dependency_manager_1.dependencyManager.getByName('DepTwo');
-            expect(depTwo.doSomething()).toEqual(depTwoTest.doSomething());
-            var depThree = dependency_manager_1.dependencyManager.getByName('DepThree');
-            expect(depThree.getName()).toEqual('test name');
-            dependency_manager_1.dependencyManager.clear();
-        });
-    });
-    describe('clear()', function () {
-        it('should clear all dependencies', function () {
-            dependency_manager_1.dependencyManager.add({ name: 'DepOne', service: DepOne }, { name: 'DepTwo', service: DepTwo });
-            var depOne = dependency_manager_1.dependencyManager.getByName('DepOne');
-            expect(depOne).toBeDefined();
-            dependency_manager_1.dependencyManager.clear();
-            var depOneAgain = dependency_manager_1.dependencyManager.getByName('DepOne');
-            expect(depOneAgain).toBeUndefined();
-        });
-    });
-});
-
-
-/***/ }),
-/* 8 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var equal_service_1 = __webpack_require__(3);
-var test_helper_1 = __webpack_require__(2);
-var testHelper = new test_helper_1.TestHelper();
+var equal_service_1 = __webpack_require__(1);
 var equalSrv = null;
 describe('EqualService', function () {
     beforeAll(function () {
-        testHelper.setupDependencyManager();
         equalSrv = new equal_service_1.EqualService();
     });
     describe('paramEqualsValue()', function () {
@@ -974,29 +881,13 @@ describe('EqualService', function () {
 
 
 /***/ }),
-/* 9 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var dependency_manager_1 = __webpack_require__(0);
-var parameter_service_1 = __webpack_require__(1);
-var equal_service_1 = __webpack_require__(3);
-exports.setupDependencies = function () {
-    dependency_manager_1.dependencyManager.clear();
-    dependency_manager_1.dependencyManager.add({ name: 'ParameterService', service: parameter_service_1.ParameterService }, { name: 'EqualService', service: equal_service_1.EqualService });
-};
-
-
-/***/ }),
-/* 10 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var parameter_service_1 = __webpack_require__(1);
+var parameter_service_1 = __webpack_require__(0);
 describe('Parameter', function () {
     describe('getDataType()', function () {
         it('should return the correct data type', function () {
@@ -1223,19 +1114,14 @@ describe('Parameter', function () {
 
 
 /***/ }),
-/* 11 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var verify_param_1 = __webpack_require__(4);
-var test_helper_1 = __webpack_require__(2);
-var testHelper = new test_helper_1.TestHelper();
+var verify_param_1 = __webpack_require__(3);
 describe('VerifyParam', function () {
-    beforeAll(function () {
-        testHelper.setupDependencyManager();
-    });
     describe('constructor()', function () {
         it('should set variables', function () {
             var verifyParam = new verify_param_1.VerifyParam(33, 'age');
@@ -1608,19 +1494,14 @@ describe('VerifyParam', function () {
 
 
 /***/ }),
-/* 12 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var verify_1 = __webpack_require__(13);
-var test_helper_1 = __webpack_require__(2);
-var testHelper = new test_helper_1.TestHelper();
+var verify_1 = __webpack_require__(11);
 describe('verify', function () {
-    beforeAll(function () {
-        testHelper.setupDependencyManager();
-    });
     it('should use the VerifyParam class to verify the parameter', function () {
         var myParam = 10;
         expect(verify_1.verify(myParam).number().isValid()).toEqual(true);
@@ -1644,16 +1525,15 @@ describe('verify', function () {
 
 
 /***/ }),
-/* 13 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var verify_param_1 = __webpack_require__(4);
+var verify_param_1 = __webpack_require__(3);
 exports.verify = function (parameter, parameterName) {
-    var verifyParam = new verify_param_1.VerifyParam(parameter, parameterName);
-    return verifyParam;
+    return new verify_param_1.VerifyParam(parameter, parameterName);
 };
 
 

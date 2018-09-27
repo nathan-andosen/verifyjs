@@ -1,19 +1,27 @@
 "use strict";
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-var dependency_manager_1 = require("./services/dependency-manager");
+var parameter_service_1 = require("./services/parameter.service");
+var equal_service_1 = require("./services/equal.service");
+var DI = require("./services/dependency-injection.service");
 var VerifyParam = (function () {
     function VerifyParam(parameter, parameterName) {
         this.paramSet = null;
         this.validationErrorMsg = null;
-        this.parameterSrv = dependency_manager_1.dependencyManager.getByName('ParameterService');
-        this.equalSrv = dependency_manager_1.dependencyManager.getByName('EqualService');
         this.param = parameter;
         this.paramName = (parameterName) ? ' (' + parameterName + ')' : '';
     }
     VerifyParam.prototype.paramIsSet = function () {
-        if (this.paramSet !== null) {
+        if (this.paramSet !== null)
             return this.paramSet;
-        }
         if (this.parameterSrv.isSet(this.param)) {
             this.paramSet = true;
             return true;
@@ -29,13 +37,11 @@ var VerifyParam = (function () {
         return this.parameterSrv.isDefined(this.param);
     };
     VerifyParam.prototype.isDefinedOrThrowError = function (err) {
-        if (this.isDefined()) {
+        if (this.isDefined())
             return true;
-        }
         if (err) {
-            if (this.parameterSrv.isString(err)) {
+            if (this.parameterSrv.isString(err))
                 throw new Error(err);
-            }
             throw err;
         }
         else {
@@ -52,13 +58,11 @@ var VerifyParam = (function () {
         return (!this.isSet());
     };
     VerifyParam.prototype.isSetOrThrowError = function (err) {
-        if (this.isSet()) {
+        if (this.isSet())
             return true;
-        }
         if (err) {
-            if (this.parameterSrv.isString(err)) {
+            if (this.parameterSrv.isString(err))
                 throw new Error(err);
-            }
             throw err;
         }
         else {
@@ -66,18 +70,16 @@ var VerifyParam = (function () {
         }
     };
     VerifyParam.prototype.isSetOrUseDefault = function (defaultVal) {
-        if (!this.paramIsSet()) {
+        if (!this.paramIsSet())
             return defaultVal;
-        }
         return this.param;
     };
     VerifyParam.prototype.isTruthy = function () {
         var val = (this.parameterSrv.isString(this.param))
             ? this.param.toLowerCase() : this.param;
         if (val && (val === '1' || val >= 1 || val === true || val === 'true'
-            || val === 'yes')) {
+            || val === 'yes'))
             return true;
-        }
         return false;
     };
     VerifyParam.prototype.isFalsey = function () {
@@ -87,9 +89,8 @@ var VerifyParam = (function () {
         var val = (this.parameterSrv.isString(this.param))
             ? this.param.toLowerCase() : this.param;
         if (val === '0' || val === 'false' || val === 'no' || val === false
-            || val < 1 || val === 'nil') {
+            || val < 1 || val === 'nil')
             return true;
-        }
         return false;
     };
     VerifyParam.prototype.isValid = function () {
@@ -99,13 +100,11 @@ var VerifyParam = (function () {
         return (!this.isValid());
     };
     VerifyParam.prototype.isValidOrThrowError = function (err) {
-        if (this.isValid()) {
+        if (this.isValid())
             return true;
-        }
         if (err) {
-            if (this.parameterSrv.isString(err)) {
+            if (this.parameterSrv.isString(err))
                 throw new Error(err);
-            }
             throw err;
         }
         else {
@@ -209,6 +208,14 @@ var VerifyParam = (function () {
         }
         return this;
     };
+    __decorate([
+        DI.Inject(parameter_service_1.ParameterService, 'ParameterService'),
+        __metadata("design:type", parameter_service_1.ParameterService)
+    ], VerifyParam.prototype, "parameterSrv", void 0);
+    __decorate([
+        DI.Inject(equal_service_1.EqualService, 'EqualService'),
+        __metadata("design:type", equal_service_1.EqualService)
+    ], VerifyParam.prototype, "equalSrv", void 0);
     return VerifyParam;
 }());
 exports.VerifyParam = VerifyParam;

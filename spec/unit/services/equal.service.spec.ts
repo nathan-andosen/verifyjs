@@ -1,12 +1,9 @@
 import { EqualService } from '../../../src/services/equal.service';
-import { TestHelper } from '../../support/test-helper';
 
-let testHelper = new TestHelper();
 let equalSrv: EqualService = null;
 
 describe('EqualService', () => {
   beforeAll(() => {
-    testHelper.setupDependencyManager();
     equalSrv = new EqualService();
   });
 

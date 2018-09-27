@@ -1,13 +1,6 @@
 import { VerifyParam } from '../../src/verify-param';
-import { TestHelper } from '../support/test-helper';
-
-let testHelper = new TestHelper();
 
 describe('VerifyParam', () => {
-  beforeAll(() => {
-    testHelper.setupDependencyManager();
-  });
-
 
   /**
    * constructor()

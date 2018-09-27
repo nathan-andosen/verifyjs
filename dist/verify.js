@@ -1,6 +1,6 @@
 /*!
  * verifyjs v1.0.1
- * (c) 2017 Nathan Anderson
+ * (c) 2018 Nathan Anderson
  */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
@@ -84,48 +84,6 @@ return /******/ (function(modules) { // webpackBootstrap
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var DependencyManager = (function () {
-    function DependencyManager() {
-        this.services = {};
-    }
-    DependencyManager.prototype.addByName = function (name, service) {
-        this.services[name] = service;
-        this.services[name.toLowerCase()] = service;
-    };
-    DependencyManager.prototype.getByName = function (name) {
-        return this.services[name];
-    };
-    DependencyManager.prototype.add = function () {
-        var _this = this;
-        var serviceClasses = [];
-        for (var _i = 0; _i < arguments.length; _i++) {
-            serviceClasses[_i] = arguments[_i];
-        }
-        serviceClasses.forEach(function (serviceClass) {
-            var service = serviceClass.service;
-            if (service instanceof Function) {
-                service = new serviceClass.service();
-            }
-            _this.addByName(serviceClass.name, service);
-        });
-    };
-    DependencyManager.prototype.clear = function () {
-        this.services = {};
-    };
-    return DependencyManager;
-}());
-exports.DependencyManager = DependencyManager;
-var dependencyManager = new DependencyManager();
-exports.dependencyManager = dependencyManager;
-
-
-/***/ }),
-/* 1 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
 var ParameterDataType;
 (function (ParameterDataType) {
     ParameterDataType[ParameterDataType["Null"] = 0] = "Null";
@@ -194,61 +152,51 @@ var ParameterService = (function () {
         return (typeof param !== 'undefined' && param !== null);
     };
     ParameterService.prototype.isJson = function (param) {
-        if (!this.isSet(param)) {
+        if (!this.isSet(param))
             return false;
-        }
         return (param instanceof Object && param.constructor === {}.constructor);
     };
     ParameterService.prototype.isArray = function (param) {
-        if (!this.isSet(param)) {
+        if (!this.isSet(param))
             return false;
-        }
         return (Array.isArray(param));
     };
     ParameterService.prototype.isString = function (param) {
-        if (!this.isSet(param)) {
+        if (!this.isSet(param))
             return false;
-        }
         return (typeof param === 'string' || param instanceof String);
     };
     ParameterService.prototype.isNumber = function (param, allowNumbersAsStrings) {
         if (allowNumbersAsStrings === void 0) { allowNumbersAsStrings = false; }
-        if (!this.isSet(param) || this.isArray(param)) {
+        if (!this.isSet(param) || this.isArray(param))
             return false;
-        }
-        if (this.isString(param) && !allowNumbersAsStrings) {
+        if (this.isString(param) && !allowNumbersAsStrings)
             return false;
-        }
         return (!(isNaN(parseFloat(param)) || !isFinite(param)));
     };
     ParameterService.prototype.isInt = function (param, allowIntAsString) {
         if (allowIntAsString === void 0) { allowIntAsString = false; }
-        if (!this.isSet(param)) {
+        if (!this.isSet(param))
             return false;
-        }
-        if (this.isString(param) && !allowIntAsString) {
+        if (this.isString(param) && !allowIntAsString)
             return false;
-        }
         var x = parseFloat(param);
         return (!(isNaN(param) || !((x | 0) === x)));
     };
     ParameterService.prototype.isEmail = function (param) {
-        if (!this.isSet(param)) {
+        if (!this.isSet(param))
             return false;
-        }
         var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         return (re.test(param));
     };
     ParameterService.prototype.isBoolean = function (param) {
-        if (!this.isSet(param)) {
+        if (!this.isSet(param))
             return false;
-        }
         return (typeof param === "boolean");
     };
     ParameterService.prototype.isEmpty = function (param) {
-        if (!this.isSet(param)) {
+        if (!this.isSet(param))
             return false;
-        }
         var dataType = this.getDataType(param);
         if (dataType === ParameterDataType.String && param.length === 0) {
             return true;
@@ -268,6 +216,42 @@ exports.ParameterService = ParameterService;
 
 
 /***/ }),
+/* 1 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var dependencyContainer = {};
+function Inject(service, serviceName) {
+    return function (target, propName) {
+        Object.defineProperty(target, propName, {
+            get: function () {
+                var name = (serviceName) ? serviceName : service.name;
+                if (!dependencyContainer[name]) {
+                    dependencyContainer[name] = new service();
+                }
+                return dependencyContainer[name];
+            }
+        });
+    };
+}
+exports.Inject = Inject;
+function override(serviceName, dependencyInstance) {
+    dependencyContainer[serviceName] = dependencyInstance;
+}
+exports.override = override;
+function getService(service, serviceName) {
+    var name = (serviceName) ? serviceName : service.name;
+    if (!dependencyContainer[name] && service) {
+        dependencyContainer[name] = new service();
+    }
+    return dependencyContainer[name];
+}
+exports.getService = getService;
+
+
+/***/ }),
 /* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -277,9 +261,7 @@ function __export(m) {
     for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
 }
 Object.defineProperty(exports, "__esModule", { value: true });
-var setup_dependencies_1 = __webpack_require__(3);
-setup_dependencies_1.setupDependencies();
-__export(__webpack_require__(5));
+__export(__webpack_require__(3));
 
 
 /***/ }),
@@ -289,12 +271,9 @@ __export(__webpack_require__(5));
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var dependency_manager_1 = __webpack_require__(0);
-var parameter_service_1 = __webpack_require__(1);
-var equal_service_1 = __webpack_require__(4);
-exports.setupDependencies = function () {
-    dependency_manager_1.dependencyManager.clear();
-    dependency_manager_1.dependencyManager.add({ name: 'ParameterService', service: parameter_service_1.ParameterService }, { name: 'EqualService', service: equal_service_1.EqualService });
+var verify_param_1 = __webpack_require__(4);
+exports.verify = function (parameter, parameterName) {
+    return new verify_param_1.VerifyParam(parameter, parameterName);
 };
 
 
@@ -304,219 +283,29 @@ exports.setupDependencies = function () {
 
 "use strict";
 
-Object.defineProperty(exports, "__esModule", { value: true });
-var dependency_manager_1 = __webpack_require__(0);
-var parameter_service_1 = __webpack_require__(1);
-var EqualService = (function () {
-    function EqualService() {
-        this.parameterSrv = null;
-        this.parameterSrv = dependency_manager_1.dependencyManager.getByName('ParameterService');
-    }
-    EqualService.prototype.paramEqualsValue = function (param, paramName, val) {
-        if (!this.parameterSrv.isSet(param) || this.parameterSrv.isString(param)
-            || this.parameterSrv.isNumber(param) || this.parameterSrv.isBoolean(param)) {
-            return this.binaryEquals(param, paramName, val);
-        }
-        else if (this.parameterSrv.isArray(param)) {
-            return this.arrayEquals(param, paramName, val);
-        }
-        else if (this.parameterSrv.isJson(param)) {
-            return this.jsonEquals(param, paramName, val);
-        }
-        else {
-            return new Error('Equal validation can only be used on data types: ' +
-                'undefined, null, string, number, boolean, array or json. ' +
-                ' The parameter being evaluated is of type: ' +
-                this.parameterSrv.getDataTypeAsString(param));
-        }
-    };
-    EqualService.prototype.binaryEquals = function (param, paramName, val) {
-        if (param === val) {
-            return true;
-        }
-        return new Error('Parameter' + paramName + ' does not equal ' + val);
-    };
-    EqualService.prototype.arrayEquals = function (param, paramName, val) {
-        if (this.parameterSrv.isArray(val) && this.arraysAreEqual(param, val)) {
-            return true;
-        }
-        return new Error('Parameter' + paramName + ' does not equal the ' +
-            'supplied array object');
-    };
-    EqualService.prototype.arraysAreEqual = function (a, b) {
-        if (a.length !== b.length) {
-            return false;
-        }
-        for (var i = 0; i < a.length; ++i) {
-            var aDataType = this.parameterSrv.getDataType(a[i]);
-            var bDataType = this.parameterSrv.getDataType(b[i]);
-            if (aDataType !== bDataType) {
-                return false;
-            }
-            switch (aDataType) {
-                case parameter_service_1.ParameterDataType.String:
-                case parameter_service_1.ParameterDataType.Number:
-                case parameter_service_1.ParameterDataType.Boolean:
-                case parameter_service_1.ParameterDataType.Null:
-                case parameter_service_1.ParameterDataType.Undefined:
-                case parameter_service_1.ParameterDataType.Unknown:
-                    if (a[i] !== b[i]) {
-                        return false;
-                    }
-                    break;
-                case parameter_service_1.ParameterDataType.Array:
-                    if (!this.arraysAreEqual(a[i], b[i])) {
-                        return false;
-                    }
-                    break;
-                case parameter_service_1.ParameterDataType.Json:
-                    if (JSON.stringify(a[i]) !== JSON.stringify(b[i])) {
-                        return false;
-                    }
-                    break;
-            }
-        }
-        return true;
-    };
-    EqualService.prototype.jsonEquals = function (param, paramName, val) {
-        if (JSON.stringify(param) === JSON.stringify(val)) {
-            return true;
-        }
-        return new Error('Parameter' + paramName + ' does not equal the ' +
-            'supplied json object');
-    };
-    EqualService.prototype.paramEqualsMin = function (param, paramName, val) {
-        var dataType = this.parameterSrv.getDataType(param);
-        if (dataType === parameter_service_1.ParameterDataType.String) {
-            return this.stringMin(param, paramName, val);
-        }
-        else if (dataType === parameter_service_1.ParameterDataType.Array) {
-            return this.arrayMin(param, paramName, val);
-        }
-        else if (dataType === parameter_service_1.ParameterDataType.Number) {
-            return this.numberMin(param, paramName, val);
-        }
-        else {
-            return new Error('Parameter' + paramName + ' is not the correct ' +
-                'data type for the min() function, only String, Number and Array are ' +
-                'supported');
-        }
-    };
-    EqualService.prototype.stringMin = function (param, paramName, val) {
-        if (param.length < val) {
-            return new Error('Parameter' + paramName + ' has a length less ' +
-                'than the minimum value required');
-        }
-        return true;
-    };
-    EqualService.prototype.arrayMin = function (param, paramName, val) {
-        if (param.length < val) {
-            return new Error('Parameter' + paramName + ' has an array length less ' +
-                'than the minimum value required');
-        }
-        return true;
-    };
-    EqualService.prototype.numberMin = function (param, paramName, val) {
-        if (param < val) {
-            return new Error('Parameter' + paramName + ' has a value less ' +
-                'than the minimum value required');
-        }
-        return true;
-    };
-    EqualService.prototype.paramEqualsMax = function (param, paramName, val) {
-        var dataType = this.parameterSrv.getDataType(param);
-        if (dataType === parameter_service_1.ParameterDataType.String) {
-            return this.stringMax(param, paramName, val);
-        }
-        else if (dataType === parameter_service_1.ParameterDataType.Array) {
-            return this.arrayMax(param, paramName, val);
-        }
-        else if (dataType === parameter_service_1.ParameterDataType.Number) {
-            return this.numberMax(param, paramName, val);
-        }
-        else {
-            return new Error('Parameter' + paramName + ' is not the correct ' +
-                'data type for the max() function, only String, Number and Array are ' +
-                'supported');
-        }
-    };
-    EqualService.prototype.stringMax = function (param, paramName, val) {
-        if (param.length > val) {
-            return new Error('Parameter' + paramName + ' has a length greater ' +
-                'than the maximum value allowed');
-        }
-        return true;
-    };
-    EqualService.prototype.arrayMax = function (param, paramName, val) {
-        if (param.length > val) {
-            return new Error('Parameter' + paramName + ' has an array length ' +
-                'greater than the maximum value allowed');
-        }
-        return true;
-    };
-    EqualService.prototype.numberMax = function (param, paramName, val) {
-        if (param > val) {
-            return new Error('Parameter' + paramName + ' has a value greater ' +
-                'than the maximum value allowed');
-        }
-        return true;
-    };
-    EqualService.prototype.paramLengthEquals = function (param, paramName, val) {
-        var dataType = this.parameterSrv.getDataType(param);
-        if (dataType === parameter_service_1.ParameterDataType.String
-            || dataType === parameter_service_1.ParameterDataType.Array) {
-            if (param.length === val) {
-                return true;
-            }
-            else {
-                return new Error('Parameter' + paramName + ' length does not equal '
-                    + val);
-            }
-        }
-        return new Error('Parameter' + paramName + ' is not the correct ' +
-            'data type for the lengthEquals() function, only String and Array are ' +
-            'supported');
-    };
-    return EqualService;
-}());
-exports.EqualService = EqualService;
-
-
-/***/ }),
-/* 5 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var verify_param_1 = __webpack_require__(6);
-exports.verify = function (parameter, parameterName) {
-    var verifyParam = new verify_param_1.VerifyParam(parameter, parameterName);
-    return verifyParam;
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-
-
-/***/ }),
-/* 6 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-var dependency_manager_1 = __webpack_require__(0);
+var parameter_service_1 = __webpack_require__(0);
+var equal_service_1 = __webpack_require__(5);
+var DI = __webpack_require__(1);
 var VerifyParam = (function () {
     function VerifyParam(parameter, parameterName) {
         this.paramSet = null;
         this.validationErrorMsg = null;
-        this.parameterSrv = dependency_manager_1.dependencyManager.getByName('ParameterService');
-        this.equalSrv = dependency_manager_1.dependencyManager.getByName('EqualService');
         this.param = parameter;
         this.paramName = (parameterName) ? ' (' + parameterName + ')' : '';
     }
     VerifyParam.prototype.paramIsSet = function () {
-        if (this.paramSet !== null) {
+        if (this.paramSet !== null)
             return this.paramSet;
-        }
         if (this.parameterSrv.isSet(this.param)) {
             this.paramSet = true;
             return true;
@@ -532,13 +321,11 @@ var VerifyParam = (function () {
         return this.parameterSrv.isDefined(this.param);
     };
     VerifyParam.prototype.isDefinedOrThrowError = function (err) {
-        if (this.isDefined()) {
+        if (this.isDefined())
             return true;
-        }
         if (err) {
-            if (this.parameterSrv.isString(err)) {
+            if (this.parameterSrv.isString(err))
                 throw new Error(err);
-            }
             throw err;
         }
         else {
@@ -555,13 +342,11 @@ var VerifyParam = (function () {
         return (!this.isSet());
     };
     VerifyParam.prototype.isSetOrThrowError = function (err) {
-        if (this.isSet()) {
+        if (this.isSet())
             return true;
-        }
         if (err) {
-            if (this.parameterSrv.isString(err)) {
+            if (this.parameterSrv.isString(err))
                 throw new Error(err);
-            }
             throw err;
         }
         else {
@@ -569,18 +354,16 @@ var VerifyParam = (function () {
         }
     };
     VerifyParam.prototype.isSetOrUseDefault = function (defaultVal) {
-        if (!this.paramIsSet()) {
+        if (!this.paramIsSet())
             return defaultVal;
-        }
         return this.param;
     };
     VerifyParam.prototype.isTruthy = function () {
         var val = (this.parameterSrv.isString(this.param))
             ? this.param.toLowerCase() : this.param;
         if (val && (val === '1' || val >= 1 || val === true || val === 'true'
-            || val === 'yes')) {
+            || val === 'yes'))
             return true;
-        }
         return false;
     };
     VerifyParam.prototype.isFalsey = function () {
@@ -590,9 +373,8 @@ var VerifyParam = (function () {
         var val = (this.parameterSrv.isString(this.param))
             ? this.param.toLowerCase() : this.param;
         if (val === '0' || val === 'false' || val === 'no' || val === false
-            || val < 1 || val === 'nil') {
+            || val < 1 || val === 'nil')
             return true;
-        }
         return false;
     };
     VerifyParam.prototype.isValid = function () {
@@ -602,13 +384,11 @@ var VerifyParam = (function () {
         return (!this.isValid());
     };
     VerifyParam.prototype.isValidOrThrowError = function (err) {
-        if (this.isValid()) {
+        if (this.isValid())
             return true;
-        }
         if (err) {
-            if (this.parameterSrv.isString(err)) {
+            if (this.parameterSrv.isString(err))
                 throw new Error(err);
-            }
             throw err;
         }
         else {
@@ -712,9 +492,195 @@ var VerifyParam = (function () {
         }
         return this;
     };
+    __decorate([
+        DI.Inject(parameter_service_1.ParameterService, 'ParameterService'),
+        __metadata("design:type", parameter_service_1.ParameterService)
+    ], VerifyParam.prototype, "parameterSrv", void 0);
+    __decorate([
+        DI.Inject(equal_service_1.EqualService, 'EqualService'),
+        __metadata("design:type", equal_service_1.EqualService)
+    ], VerifyParam.prototype, "equalSrv", void 0);
     return VerifyParam;
 }());
 exports.VerifyParam = VerifyParam;
+
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var parameter_service_1 = __webpack_require__(0);
+var DI = __webpack_require__(1);
+var EqualService = (function () {
+    function EqualService() {
+    }
+    EqualService.prototype.paramEqualsValue = function (param, paramName, val) {
+        if (!this.parameterSrv.isSet(param) || this.parameterSrv.isString(param)
+            || this.parameterSrv.isNumber(param) || this.parameterSrv.isBoolean(param)) {
+            return this.binaryEquals(param, paramName, val);
+        }
+        else if (this.parameterSrv.isArray(param)) {
+            return this.arrayEquals(param, paramName, val);
+        }
+        else if (this.parameterSrv.isJson(param)) {
+            return this.jsonEquals(param, paramName, val);
+        }
+        else {
+            return new Error('Equal validation can only be used on data types: ' +
+                'undefined, null, string, number, boolean, array or json. ' +
+                ' The parameter being evaluated is of type: ' +
+                this.parameterSrv.getDataTypeAsString(param));
+        }
+    };
+    EqualService.prototype.binaryEquals = function (param, paramName, val) {
+        if (param === val)
+            return true;
+        return new Error('Parameter' + paramName + ' does not equal ' + val);
+    };
+    EqualService.prototype.arrayEquals = function (param, paramName, val) {
+        if (this.parameterSrv.isArray(val) && this.arraysAreEqual(param, val))
+            return true;
+        return new Error('Parameter' + paramName + ' does not equal the ' +
+            'supplied array object');
+    };
+    EqualService.prototype.arraysAreEqual = function (a, b) {
+        if (a.length !== b.length)
+            return false;
+        for (var i = 0; i < a.length; ++i) {
+            var aDataType = this.parameterSrv.getDataType(a[i]);
+            var bDataType = this.parameterSrv.getDataType(b[i]);
+            if (aDataType !== bDataType)
+                return false;
+            switch (aDataType) {
+                case parameter_service_1.ParameterDataType.String:
+                case parameter_service_1.ParameterDataType.Number:
+                case parameter_service_1.ParameterDataType.Boolean:
+                case parameter_service_1.ParameterDataType.Null:
+                case parameter_service_1.ParameterDataType.Undefined:
+                case parameter_service_1.ParameterDataType.Unknown:
+                    if (a[i] !== b[i])
+                        return false;
+                    break;
+                case parameter_service_1.ParameterDataType.Array:
+                    if (!this.arraysAreEqual(a[i], b[i]))
+                        return false;
+                    break;
+                case parameter_service_1.ParameterDataType.Json:
+                    if (JSON.stringify(a[i]) !== JSON.stringify(b[i]))
+                        return false;
+                    break;
+            }
+        }
+        return true;
+    };
+    EqualService.prototype.jsonEquals = function (param, paramName, val) {
+        if (JSON.stringify(param) === JSON.stringify(val))
+            return true;
+        return new Error('Parameter' + paramName + ' does not equal the ' +
+            'supplied json object');
+    };
+    EqualService.prototype.paramEqualsMin = function (param, paramName, val) {
+        var dataType = this.parameterSrv.getDataType(param);
+        if (dataType === parameter_service_1.ParameterDataType.String) {
+            return this.stringMin(param, paramName, val);
+        }
+        else if (dataType === parameter_service_1.ParameterDataType.Array) {
+            return this.arrayMin(param, paramName, val);
+        }
+        else if (dataType === parameter_service_1.ParameterDataType.Number) {
+            return this.numberMin(param, paramName, val);
+        }
+        else {
+            return new Error('Parameter' + paramName + ' is not the correct ' +
+                'data type for the min() function, only String, Number and Array are ' +
+                'supported');
+        }
+    };
+    EqualService.prototype.stringMin = function (param, paramName, val) {
+        if (param.length < val)
+            return new Error('Parameter' + paramName + ' has a length less ' +
+                'than the minimum value required');
+        return true;
+    };
+    EqualService.prototype.arrayMin = function (param, paramName, val) {
+        if (param.length < val)
+            return new Error('Parameter' + paramName + ' has an array length less ' +
+                'than the minimum value required');
+        return true;
+    };
+    EqualService.prototype.numberMin = function (param, paramName, val) {
+        if (param < val)
+            return new Error('Parameter' + paramName + ' has a value less ' +
+                'than the minimum value required');
+        return true;
+    };
+    EqualService.prototype.paramEqualsMax = function (param, paramName, val) {
+        var dataType = this.parameterSrv.getDataType(param);
+        if (dataType === parameter_service_1.ParameterDataType.String) {
+            return this.stringMax(param, paramName, val);
+        }
+        else if (dataType === parameter_service_1.ParameterDataType.Array) {
+            return this.arrayMax(param, paramName, val);
+        }
+        else if (dataType === parameter_service_1.ParameterDataType.Number) {
+            return this.numberMax(param, paramName, val);
+        }
+        else {
+            return new Error('Parameter' + paramName + ' is not the correct ' +
+                'data type for the max() function, only String, Number and Array are ' +
+                'supported');
+        }
+    };
+    EqualService.prototype.stringMax = function (param, paramName, val) {
+        if (param.length > val)
+            return new Error('Parameter' + paramName + ' has a length greater ' +
+                'than the maximum value allowed');
+        return true;
+    };
+    EqualService.prototype.arrayMax = function (param, paramName, val) {
+        if (param.length > val)
+            return new Error('Parameter' + paramName + ' has an array length ' +
+                'greater than the maximum value allowed');
+        return true;
+    };
+    EqualService.prototype.numberMax = function (param, paramName, val) {
+        if (param > val)
+            return new Error('Parameter' + paramName + ' has a value greater ' +
+                'than the maximum value allowed');
+        return true;
+    };
+    EqualService.prototype.paramLengthEquals = function (param, paramName, val) {
+        var dataType = this.parameterSrv.getDataType(param);
+        if (dataType === parameter_service_1.ParameterDataType.String
+            || dataType === parameter_service_1.ParameterDataType.Array) {
+            if (param.length === val)
+                return true;
+            return new Error('Parameter' + paramName + ' length does not equal '
+                + val);
+        }
+        return new Error('Parameter' + paramName + ' is not the correct ' +
+            'data type for the lengthEquals() function, only String and Array are ' +
+            'supported');
+    };
+    __decorate([
+        DI.Inject(parameter_service_1.ParameterService, 'ParameterService'),
+        __metadata("design:type", parameter_service_1.ParameterService)
+    ], EqualService.prototype, "parameterSrv", void 0);
+    return EqualService;
+}());
+exports.EqualService = EqualService;
 
 
 /***/ })

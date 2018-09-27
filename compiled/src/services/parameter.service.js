@@ -68,61 +68,51 @@ var ParameterService = (function () {
         return (typeof param !== 'undefined' && param !== null);
     };
     ParameterService.prototype.isJson = function (param) {
-        if (!this.isSet(param)) {
+        if (!this.isSet(param))
             return false;
-        }
         return (param instanceof Object && param.constructor === {}.constructor);
     };
     ParameterService.prototype.isArray = function (param) {
-        if (!this.isSet(param)) {
+        if (!this.isSet(param))
             return false;
-        }
         return (Array.isArray(param));
     };
     ParameterService.prototype.isString = function (param) {
-        if (!this.isSet(param)) {
+        if (!this.isSet(param))
             return false;
-        }
         return (typeof param === 'string' || param instanceof String);
     };
     ParameterService.prototype.isNumber = function (param, allowNumbersAsStrings) {
         if (allowNumbersAsStrings === void 0) { allowNumbersAsStrings = false; }
-        if (!this.isSet(param) || this.isArray(param)) {
+        if (!this.isSet(param) || this.isArray(param))
             return false;
-        }
-        if (this.isString(param) && !allowNumbersAsStrings) {
+        if (this.isString(param) && !allowNumbersAsStrings)
             return false;
-        }
         return (!(isNaN(parseFloat(param)) || !isFinite(param)));
     };
     ParameterService.prototype.isInt = function (param, allowIntAsString) {
         if (allowIntAsString === void 0) { allowIntAsString = false; }
-        if (!this.isSet(param)) {
+        if (!this.isSet(param))
             return false;
-        }
-        if (this.isString(param) && !allowIntAsString) {
+        if (this.isString(param) && !allowIntAsString)
             return false;
-        }
         var x = parseFloat(param);
         return (!(isNaN(param) || !((x | 0) === x)));
     };
     ParameterService.prototype.isEmail = function (param) {
-        if (!this.isSet(param)) {
+        if (!this.isSet(param))
             return false;
-        }
         var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         return (re.test(param));
     };
     ParameterService.prototype.isBoolean = function (param) {
-        if (!this.isSet(param)) {
+        if (!this.isSet(param))
             return false;
-        }
         return (typeof param === "boolean");
     };
     ParameterService.prototype.isEmpty = function (param) {
-        if (!this.isSet(param)) {
+        if (!this.isSet(param))
             return false;
-        }
         var dataType = this.getDataType(param);
         if (dataType === ParameterDataType.String && param.length === 0) {
             return true;

@@ -115,7 +115,7 @@ export class ParameterService {
    * @memberof Parameter
    */
   isJson(param: any): boolean {
-    if(!this.isSet(param)) { return false; }
+    if(!this.isSet(param)) return false;
     return (param instanceof Object && param.constructor === {}.constructor); 
   }
 
@@ -128,7 +128,7 @@ export class ParameterService {
    * @memberof Parameter
    */
   isArray(param: any): boolean {
-    if(!this.isSet(param)) { return false; }
+    if(!this.isSet(param)) return false;
     return (Array.isArray(param));
   }
 
@@ -141,7 +141,7 @@ export class ParameterService {
    * @memberof Parameter
    */
   isString(param: any): boolean {
-    if(!this.isSet(param)) { return false; }
+    if(!this.isSet(param)) return false;
     return (typeof param === 'string' || param instanceof String);
   }
 
@@ -154,8 +154,8 @@ export class ParameterService {
    * @memberof Parameter
    */
   isNumber(param: any, allowNumbersAsStrings: boolean = false): boolean {
-    if(!this.isSet(param) || this.isArray(param)) { return false; }
-    if(this.isString(param) && !allowNumbersAsStrings){ return false; }
+    if(!this.isSet(param) || this.isArray(param)) return false;
+    if(this.isString(param) && !allowNumbersAsStrings) return false;
     return (!(isNaN(parseFloat(param)) || !isFinite(param)));
   }
 
@@ -168,9 +168,9 @@ export class ParameterService {
    * @memberof Parameter
    */
   isInt(param: any, allowIntAsString: boolean = false): boolean {
-    if(!this.isSet(param)) { return false; }
-    if(this.isString(param) && !allowIntAsString){ return false; }
-    let x = parseFloat(param);
+    if(!this.isSet(param)) return false;
+    if(this.isString(param) && !allowIntAsString) return false;
+    const x = parseFloat(param);
     return (!(isNaN(param) || !((x | 0) === x)));
   }
 
@@ -183,8 +183,8 @@ export class ParameterService {
    * @memberof Parameter
    */
   isEmail(param: any): boolean {
-    if(!this.isSet(param)) { return false; }
-    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    if(!this.isSet(param)) return false;
+    const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return (re.test(param));
   }
 
@@ -197,7 +197,7 @@ export class ParameterService {
    * @memberof Parameter
    */
   isBoolean(param: any): boolean {
-    if(!this.isSet(param)) { return false; }
+    if(!this.isSet(param)) return false;
     return (typeof param === "boolean");
   }
 
@@ -210,8 +210,8 @@ export class ParameterService {
    * @memberof ParameterService
    */
   isEmpty(param: any): boolean {
-    if(!this.isSet(param)) { return false; }
-    let dataType = this.getDataType(param);
+    if(!this.isSet(param)) return false;
+    const dataType = this.getDataType(param);
     if(dataType === ParameterDataType.String && param.length === 0) {
       return true;
     } else if(dataType === ParameterDataType.Json) {
