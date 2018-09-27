@@ -533,6 +533,20 @@ var VerifyParam = (function () {
             throw new Error(this.validationErrorMsg);
         }
     };
+    VerifyParam.prototype.type = function (type) {
+        if (this.paramIsSet()) {
+            if (typeof this[type] !== "function")
+                throw new Error('Type: ' + type + ' not supported');
+            return this[type]();
+        }
+        return this;
+    };
+    VerifyParam.prototype.boolean = function () {
+        if (this.paramIsSet() && !this.parameterSrv.isBoolean(this.param)) {
+            this.setError('Parameter' + this.paramName + ' is not a boolean');
+        }
+        return this;
+    };
     VerifyParam.prototype.string = function () {
         if (this.paramIsSet() && !this.parameterSrv.isString(this.param)) {
             this.setError('Parameter' + this.paramName + ' is not a string');
@@ -1369,6 +1383,48 @@ describe('VerifyParam', function () {
             catch (e) {
                 expect(e.message).toEqual('testing');
             }
+        });
+    });
+    describe('type()', function () {
+        it('should return true for all valid types', function () {
+            var verifyParam = new verify_param_1.VerifyParam(false);
+            expect(verifyParam.type('boolean').isValid()).toEqual(true);
+            verifyParam = new verify_param_1.VerifyParam("a string");
+            expect(verifyParam.type('string').isValid()).toEqual(true);
+            verifyParam = new verify_param_1.VerifyParam(10.2);
+            expect(verifyParam.type('number').isValid()).toEqual(true);
+            verifyParam = new verify_param_1.VerifyParam(2);
+            expect(verifyParam.type('int').isValid()).toEqual(true);
+            verifyParam = new verify_param_1.VerifyParam([1, 2]);
+            expect(verifyParam.type('array').isValid()).toEqual(true);
+            verifyParam = new verify_param_1.VerifyParam({});
+            expect(verifyParam.type('json').isValid()).toEqual(true);
+            verifyParam = new verify_param_1.VerifyParam({ "ab": "cd" });
+            expect(verifyParam.type('json').isValid()).toEqual(true);
+            verifyParam = new verify_param_1.VerifyParam("nathan@email.com");
+            expect(verifyParam.type('email').isValid()).toEqual(true);
+        });
+        it('should return false as the types are invalid', function () {
+            var verifyParam = new verify_param_1.VerifyParam(false);
+            expect(verifyParam.type('string').isValid()).toEqual(false);
+            verifyParam = new verify_param_1.VerifyParam("nathanemail.com");
+            expect(verifyParam.type('email').isValid()).toEqual(false);
+            verifyParam = new verify_param_1.VerifyParam([]);
+            expect(verifyParam.type('json').isValid()).toEqual(false);
+            verifyParam = new verify_param_1.VerifyParam(null);
+            expect(verifyParam.type('json').isValid()).toEqual(false);
+            verifyParam = new verify_param_1.VerifyParam(2.3);
+            expect(verifyParam.type('int').isValid()).toEqual(false);
+        });
+    });
+    describe('boolean()', function () {
+        it('should return true as the parameter is a boolean', function () {
+            var verifyParam = new verify_param_1.VerifyParam(false);
+            expect(verifyParam.boolean().isValid()).toEqual(true);
+        });
+        it('should return false as the parameter is not a boolean', function () {
+            var verifyParam = new verify_param_1.VerifyParam(1);
+            expect(verifyParam.boolean().isValid()).toEqual(false);
         });
     });
     describe('string()', function () {
