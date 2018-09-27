@@ -1,4 +1,4 @@
-![Test Coverage-shield-badge-1](https://img.shields.io/badge/Test%20Coverage-100%25-brightgreen.svg)
+![Test Coverage-shield-badge-1](https://img.shields.io/badge/Test%20Coverage-98.11%25-brightgreen.svg)
 
 # Verifyjs
 
@@ -43,6 +43,14 @@ verify('23').number().isValid(); // will return false
 verify('23').number(true).isValid(); // will return true
 ```
 
+### Using the distribution file (dist/verify.min.js)
+
+```javascript
+<script src="../dist/verify.min.js" type="text/javascript"></script>
+
+Thenja.verify(10).equals(12).isValid()
+```
+
 ### verify(parameter: any, parameterName?: string)
 
 Everything starts with the verify function. This method accepts two arguments, the first being the parameter you want to verify and the second argument is the name of the parameter, this is optional. This helps with returning useful error messages (check the examples below).
@@ -53,12 +61,14 @@ _The chainable validation methods have to be used with __isValid()__, __isNotVal
 
 |Method | Description
 |-------|-------------|
-|string() | verify the parameter is a string |
-|number(allowNumberAsString: boolean = false) | verify the parameter is a number |
-|int(allowIntAsString: boolean = false) | verify the parameter is an integer |
-|array() | verify the parameter is an array |
-|json() | verify the parameter is a json object |
-|email() | verify the parameter is a valid email address |
+|type(type: string) | verify the parameter is of a certain type. Available types: string, number, int, array, boolean, json, email |
+|string() | verify the parameter is a string. _Alias for .type('string')_ |
+|number(allowNumberAsString: boolean = false) | verify the parameter is a number. _Alias for .type('number')_ |
+|int(allowIntAsString: boolean = false) | verify the parameter is an integer. _Alias for .type('int')_ |
+|array() | verify the parameter is an array. _Alias for .type('array')_ |
+|boolean() | verify the parameter is a boolean. _Alias for .type('boolean')_ |
+|json() | verify the parameter is a json object. _Alias for .type('json')_ |
+|email() | verify the parameter is a valid email address. _Alias for .type('email')_ |
 |min(value: number) | verify the parameter meets the minimum value required, can only be used with data types: string, number and array |
 |max(value: number) | verify the parameter does not exceed the maximum allowed value, can only be used with data types: string, number and array |
 |equals(value: any) | verify the parameter eqauls the value |

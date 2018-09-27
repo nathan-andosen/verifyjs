@@ -1,5 +1,5 @@
-import { dependencyManager } from './dependency-manager';
 import { ParameterService, ParameterDataType } from './parameter.service';
+import * as DI from './dependency-injection.service';
 
 /**
  * A service to determine if things are equal
@@ -8,17 +8,8 @@ import { ParameterService, ParameterDataType } from './parameter.service';
  * @class EqualService
  */
 export class EqualService {
-  private parameterSrv: ParameterService = null;
-
-
-  /**
-   * Creates an instance of EqualService.
-   * 
-   * @memberof EqualService
-   */
-  constructor() {
-    this.parameterSrv = dependencyManager.getByName('ParameterService');
-  }
+  @DI.Inject(ParameterService, 'ParameterService')
+  private parameterSrv: ParameterService;
 
 
   /**
@@ -59,9 +50,7 @@ export class EqualService {
    * @memberof EqualService
    */
   private binaryEquals(param: any, paramName: string, val: any): boolean|Error {
-    if(param === val) {
-      return true;
-    }
+    if(param === val) return true;
     return new Error('Parameter' + paramName + ' does not equal ' + val);
   }
 
@@ -77,9 +66,8 @@ export class EqualService {
    * @memberof EqualService
    */
   private arrayEquals(param: any, paramName: string, val: any): boolean|Error {
-    if(this.parameterSrv.isArray(val) && this.arraysAreEqual(param, val)) {
+    if(this.parameterSrv.isArray(val) && this.arraysAreEqual(param, val)) 
       return true;
-    }
     return new Error('Parameter' + paramName + ' does not equal the ' +
     'supplied array object');
   }
@@ -95,11 +83,11 @@ export class EqualService {
    * @memberof EqualService
    */
   private arraysAreEqual(a: any[], b: any[]): boolean {
-    if(a.length !== b.length) { return false; }
+    if(a.length !== b.length) return false;
     for(let i = 0; i < a.length; ++i) {
       let aDataType = this.parameterSrv.getDataType(a[i]);
       let bDataType = this.parameterSrv.getDataType(b[i]);
-      if(aDataType !== bDataType) { return false; }
+      if(aDataType !== bDataType) return false;
       switch(aDataType) {
         case ParameterDataType.String:
         case ParameterDataType.Number:
@@ -107,13 +95,13 @@ export class EqualService {
         case ParameterDataType.Null:
         case ParameterDataType.Undefined:
         case ParameterDataType.Unknown:
-          if(a[i] !== b[i]) { return false; }
+          if(a[i] !== b[i]) return false;
           break;
         case ParameterDataType.Array:
-          if(!this.arraysAreEqual(a[i], b[i])) { return false; }
+          if(!this.arraysAreEqual(a[i], b[i])) return false;
           break;
         case ParameterDataType.Json:
-          if(JSON.stringify(a[i]) !== JSON.stringify(b[i])) { return false; }
+          if(JSON.stringify(a[i]) !== JSON.stringify(b[i])) return false;
           break;
       }
     }
@@ -132,9 +120,7 @@ export class EqualService {
    * @memberof EqualService
    */
   private jsonEquals(param: any, paramName: string, val: any): boolean|Error {
-    if(JSON.stringify(param) === JSON.stringify(val)) {
-      return true;
-    }
+    if(JSON.stringify(param) === JSON.stringify(val)) return true;
     return new Error('Parameter' + paramName + ' does not equal the ' +
     'supplied json object');
   }
@@ -178,10 +164,9 @@ export class EqualService {
    * @memberof EqualService
    */
   private stringMin(param: any, paramName: string, val: number): boolean|Error {
-    if(param.length < val) {
+    if(param.length < val) 
       return new Error('Parameter' + paramName + ' has a length less ' +
       'than the minimum value required');
-    }
     return true;
   }
 
@@ -197,10 +182,9 @@ export class EqualService {
    * @memberof EqualService
    */
   private arrayMin(param: any, paramName: string, val: number): boolean|Error {
-    if(param.length < val) {
+    if(param.length < val)
       return new Error('Parameter' + paramName + ' has an array length less ' +
       'than the minimum value required');
-    }
     return true;
   }
 
@@ -216,10 +200,9 @@ export class EqualService {
    * @memberof EqualService
    */
   private numberMin(param: any, paramName: string, val: number): boolean|Error {
-    if(param < val) {
+    if(param < val)
       return new Error('Parameter' + paramName + ' has a value less ' +
       'than the minimum value required');
-    }
     return true;
   }
 
@@ -236,7 +219,7 @@ export class EqualService {
    */
   paramEqualsMax(param: any, paramName: string, 
   val: number): boolean|Error {
-    let dataType = this.parameterSrv.getDataType(param);
+    const dataType = this.parameterSrv.getDataType(param);
     if(dataType === ParameterDataType.String) {
       return this.stringMax(param, paramName, val);
     } else if(dataType === ParameterDataType.Array) {
@@ -262,10 +245,9 @@ export class EqualService {
    * @memberof EqualService
    */
   private stringMax(param: any, paramName: string, val: number): boolean|Error {
-    if(param.length > val) {
+    if(param.length > val) 
       return new Error('Parameter' + paramName + ' has a length greater ' +
       'than the maximum value allowed');
-    }
     return true;
   }
 
@@ -281,10 +263,9 @@ export class EqualService {
    * @memberof EqualService
    */
   private arrayMax(param: any, paramName: string, val: number): boolean|Error {
-    if(param.length > val) {
+    if(param.length > val)
       return new Error('Parameter' + paramName + ' has an array length ' +
       'greater than the maximum value allowed');
-    }
     return true;
   }
 
@@ -300,10 +281,9 @@ export class EqualService {
    * @memberof EqualService
    */
   private numberMax(param: any, paramName: string, val: number): boolean|Error {
-    if(param > val) {
+    if(param > val)
       return new Error('Parameter' + paramName + ' has a value greater ' +
       'than the maximum value allowed');
-    }
     return true;
   }
 
@@ -318,15 +298,12 @@ export class EqualService {
    * @memberof EqualService
    */
   paramLengthEquals(param: any, paramName: string, val: number): boolean|Error {
-    let dataType = this.parameterSrv.getDataType(param);
+    const dataType = this.parameterSrv.getDataType(param);
     if(dataType === ParameterDataType.String 
     || dataType === ParameterDataType.Array) {
-      if(param.length === val) {
-        return true;
-      } else {
-        return new Error('Parameter' + paramName + ' length does not equal '
+      if(param.length === val) return true;
+      return new Error('Parameter' + paramName + ' length does not equal '
         + val);
-      }
     }
     return new Error('Parameter' + paramName + ' is not the correct ' +
     'data type for the lengthEquals() function, only String and Array are ' +

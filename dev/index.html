@@ -5,7 +5,10 @@
   <title>Dev playground</title>
   <script src="../dist/verify.min.js" type="text/javascript"></script>
   <script type="text/javascript">
+    window.verify = Thenja.verify;
     console.log(verify(10).equals(12).isValid());
+
+
 
     var myFunc = function() {
       return new Promise(function(resolve, reject){
@@ -14,7 +17,6 @@
       });
     };
 
-
     myFunc().then(function(msg) {
       var a = 10;
       // console.log(msg);
@@ -22,6 +24,62 @@
       var test = 10;
       // console.log(err);
     });
+
+    // // TODO:
+
+    // // what about this?
+    // verify(myAge, 'age').min(18).max(32)
+    // .isValidOrThrowError({ 
+    //   min: 'You must be at least 18',
+    //   max: 'You are to old for this'
+    // });
+
+
+
+    // var inpData = {
+    //   email: 'nathan@email.com',
+    //   password: 'password',
+    //   firstname: 'Nathan',
+    //   lastname: 'Anderson',
+    //   age: 43,
+    //   address: {
+    //     street: 'My street',
+    //     postcode: '0001'
+    //   }
+    // };
+
+    // verify(inpData.email, 'email').type('email').isValidOrThrowError();
+    // verify(inpData.password, 'password').type('string').min(8).notEquals('password123').isValidOrThrowError();
+    // verify(inpData.firstname, 'firstname').type('stirng').isValidOrThrowError('Please enter a valid firstname.');
+    // verify(inpData.lastname, 'lastname').notRequired().type('string').isValidOrThrowError();
+    // verify(inpData.age, 'age').type('int').min(1).max(199).isValidOrThrowError();
+    // verify(inpData.address.street, 'street address').type('string').isValidOrThrowError();
+    // verify(inpData.address.postcode, 'postcode').type('string').min(4).max(4).isValidOrThrowError();
+
+
+
+    // var validationSchema = {
+    //   email: { type: 'email' },
+    //   password: { type: 'string', min: 8, notEquals: 'password123' },
+    //   firstname: { type: 'string', error: 'Please enter a valid firstname' },
+    //   lastname: { required: false, type: 'string' },
+    //   age: { type: 'int', max: 199, min: 1 },
+    //   address: [
+    //     {
+    //       street: { type: 'stirng', parameterName: 'street address' },
+    //       postcode: { type: 'string', min: 4, max: 4 }
+    //     }
+    //   ]
+    // };
+    // var errors = validate(inpData, validationSchema);
+    // // errors would equal 
+    // [
+    //   {
+    //     email: 'Invalid email address'
+    //   }, {
+    //     age: 'error message here'
+    //   }
+    // ]
 
   </script>
 </head>

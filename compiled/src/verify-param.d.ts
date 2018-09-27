@@ -20,6 +20,8 @@ export declare class VerifyParam {
     isValid(): boolean;
     isNotValid(): boolean;
     isValidOrThrowError(err?: any): boolean;
+    type(type: string): VerifyParam;
+    boolean(): VerifyParam;
     string(): VerifyParam;
     array(): VerifyParam;
     number(allowNumberAsString?: boolean): VerifyParam;

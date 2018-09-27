@@ -1,9 +1,6 @@
-import { dependencyManager } from './services/dependency-manager';
-import { 
-  ParameterService, 
-  ParameterDataType 
-} from './services/parameter.service';
+import { ParameterService } from './services/parameter.service';
 import { EqualService } from './services/equal.service';
+import * as DI from './services/dependency-injection.service';
 
 
 /**
@@ -13,7 +10,9 @@ import { EqualService } from './services/equal.service';
  * @class VerifyParam
  */
 export class VerifyParam {
+  @DI.Inject(ParameterService, 'ParameterService')
   private parameterSrv: ParameterService;
+  @DI.Inject(EqualService, 'EqualService')
   private equalSrv: EqualService;
   private param: any;
   private paramName: string;
@@ -29,8 +28,6 @@ export class VerifyParam {
    * @memberof VerifyParam
    */
   constructor(parameter: any, parameterName?: string) {
-    this.parameterSrv = dependencyManager.getByName('ParameterService');
-    this.equalSrv = dependencyManager.getByName('EqualService');
     this.param = parameter;
     this.paramName = (parameterName) ? ' (' + parameterName + ')' : '';
   }
@@ -45,9 +42,7 @@ export class VerifyParam {
    * @memberof VerifyParam
    */
   private paramIsSet(): boolean {
-    if(this.paramSet !== null) {
-      return this.paramSet;
-    }
+    if(this.paramSet !== null) return this.paramSet;
     if(this.parameterSrv.isSet(this.param)) {
       this.paramSet = true;
       return true;
@@ -90,13 +85,9 @@ export class VerifyParam {
    * @memberof VerifyParam
    */
   isDefinedOrThrowError(err?: any): boolean {
-    if(this.isDefined()) {
-      return true;
-    }
+    if(this.isDefined()) return true;
     if(err) {
-      if(this.parameterSrv.isString(err)) {
-        throw new Error(err);
-      }
+      if(this.parameterSrv.isString(err)) throw new Error(err);
       throw err;
     } else {
       throw new Error('Parameter' + this.paramName + ' is undefined');
@@ -145,13 +136,9 @@ export class VerifyParam {
    * @memberof VerifyParam
    */
   isSetOrThrowError(err?: any): boolean {
-    if(this.isSet()) {
-      return true;
-    }
+    if(this.isSet()) return true;
     if(err) {
-      if(this.parameterSrv.isString(err)) {
-        throw new Error(err);
-      }
+      if(this.parameterSrv.isString(err)) throw new Error(err);
       throw err;
     } else {
       throw new Error(this.validationErrorMsg);
@@ -167,9 +154,7 @@ export class VerifyParam {
    * @memberof VerifyParam
    */
   isSetOrUseDefault(defaultVal: any): any {
-    if(!this.paramIsSet()) {
-      return defaultVal;
-    }
+    if(!this.paramIsSet()) return defaultVal;
     return this.param;
   } 
   
@@ -184,9 +169,7 @@ export class VerifyParam {
     let val = (this.parameterSrv.isString(this.param)) 
       ? this.param.toLowerCase() : this.param;
     if(val && (val === '1' || val >= 1 || val === true || val === 'true' 
-    || val === 'yes')) {
-      return true;
-    }
+    || val === 'yes')) return true;
     return false;
   }
 
@@ -202,9 +185,7 @@ export class VerifyParam {
     let val = (this.parameterSrv.isString(this.param)) 
       ? this.param.toLowerCase() : this.param;
     if(val === '0' || val === 'false' || val === 'no' || val === false 
-    || val < 1 || val === 'nil') {
-      return true;
-    } 
+    || val < 1 || val === 'nil') return true;
     return false;
   }
 
@@ -242,13 +223,9 @@ export class VerifyParam {
    * @memberof VerifyParam
    */
   isValidOrThrowError(err?: any): boolean {
-    if(this.isValid()) {
-      return true;
-    }
+    if(this.isValid()) return true;
     if(err) {
-      if(this.parameterSrv.isString(err)) {
-        throw new Error(err);
-      }
+      if(this.parameterSrv.isString(err)) throw new Error(err);
       throw err;
     } else {
       throw new Error(this.validationErrorMsg);
@@ -256,6 +233,40 @@ export class VerifyParam {
   } 
 
   // CHAINABLE FUNCTIONS BELOW /////////////////////////////////////////////////
+
+
+  /**
+   * Determine if the parameter is of type
+   * Available types:
+   * string, number, int, boolean, array, json, email
+   *
+   * @param {string} type
+   * @returns {VerifyParam}
+   * @memberof VerifyParam
+   */
+  type(type: string): VerifyParam {
+    if(this.paramIsSet()) {
+      if(typeof this[type] !== "function") 
+        throw new Error('Type: ' + type + ' not supported');
+      return this[type]();
+    }
+    return this;
+  }
+
+
+  /**
+   * Determine if the parameter is a boolean
+   *
+   * @returns {VerifyParam}
+   * @memberof VerifyParam
+   */
+  boolean(): VerifyParam {
+    if(this.paramIsSet() && !this.parameterSrv.isBoolean(this.param)) {
+      this.setError('Parameter' + this.paramName + ' is not a boolean');
+    }
+    return this;
+  }
+
 
   /**
    * Determine if the parameter is a string
