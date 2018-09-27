@@ -70,6 +70,42 @@
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+var dependencyContainer = {};
+function Inject(service, serviceName) {
+    return function (target, propName) {
+        Object.defineProperty(target, propName, {
+            get: function () {
+                var name = (serviceName) ? serviceName : service.name;
+                if (!dependencyContainer[name]) {
+                    dependencyContainer[name] = new service();
+                }
+                return dependencyContainer[name];
+            }
+        });
+    };
+}
+exports.Inject = Inject;
+function override(serviceName, dependencyInstance) {
+    dependencyContainer[serviceName] = dependencyInstance;
+}
+exports.override = override;
+function getService(service, serviceName) {
+    var name = (serviceName) ? serviceName : service.name;
+    if (!dependencyContainer[name] && service) {
+        dependencyContainer[name] = new service();
+    }
+    return dependencyContainer[name];
+}
+exports.getService = getService;
+
+
+/***/ }),
+/* 1 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
 var ParameterDataType;
 (function (ParameterDataType) {
     ParameterDataType[ParameterDataType["Null"] = 0] = "Null";
@@ -202,7 +238,7 @@ exports.ParameterService = ParameterService;
 
 
 /***/ }),
-/* 1 */
+/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -217,8 +253,8 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var parameter_service_1 = __webpack_require__(0);
-var DI = __webpack_require__(2);
+var parameter_service_1 = __webpack_require__(1);
+var DI = __webpack_require__(0);
 var EqualService = (function () {
     function EqualService() {
     }
@@ -380,42 +416,6 @@ exports.EqualService = EqualService;
 
 
 /***/ }),
-/* 2 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var dependencyContainer = {};
-function Inject(service, serviceName) {
-    return function (target, propName) {
-        Object.defineProperty(target, propName, {
-            get: function () {
-                var name = (serviceName) ? serviceName : service.name;
-                if (!dependencyContainer[name]) {
-                    dependencyContainer[name] = new service();
-                }
-                return dependencyContainer[name];
-            }
-        });
-    };
-}
-exports.Inject = Inject;
-function override(serviceName, dependencyInstance) {
-    dependencyContainer[serviceName] = dependencyInstance;
-}
-exports.override = override;
-function getService(service, serviceName) {
-    var name = (serviceName) ? serviceName : service.name;
-    if (!dependencyContainer[name] && service) {
-        dependencyContainer[name] = new service();
-    }
-    return dependencyContainer[name];
-}
-exports.getService = getService;
-
-
-/***/ }),
 /* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -431,9 +431,9 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var parameter_service_1 = __webpack_require__(0);
-var equal_service_1 = __webpack_require__(1);
-var DI = __webpack_require__(2);
+var parameter_service_1 = __webpack_require__(1);
+var equal_service_1 = __webpack_require__(2);
+var DI = __webpack_require__(0);
 var VerifyParam = (function () {
     function VerifyParam(parameter, parameterName) {
         this.paramSet = null;
@@ -661,7 +661,7 @@ testsContext.keys().forEach(testsContext);
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
-	"./services/dependency-manager.spec": 6,
+	"./services/dependency-injection.service.spec": 6,
 	"./services/equal.service.spec": 7,
 	"./services/parameter.service.spec": 8,
 	"./verify-param.spec": 9,
@@ -685,8 +685,47 @@ webpackContext.id = 5;
 
 /***/ }),
 /* 6 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
+"use strict";
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var DI = __webpack_require__(0);
+describe('Dependency Injection Service', function () {
+    it('should inject dependencies', function () {
+        var MyClass = (function () {
+            function MyClass() {
+            }
+            MyClass.prototype.sayHi = function () {
+                return 'Hi';
+            };
+            return MyClass;
+        }());
+        var TestClass = (function () {
+            function TestClass() {
+            }
+            TestClass.prototype.sayHi = function () {
+                return this.myClass.sayHi();
+            };
+            __decorate([
+                DI.Inject(MyClass),
+                __metadata("design:type", MyClass)
+            ], TestClass.prototype, "myClass", void 0);
+            return TestClass;
+        }());
+        var testClass = new TestClass();
+        expect(testClass.sayHi()).toEqual('Hi');
+    });
+});
 
 
 /***/ }),
@@ -696,7 +735,7 @@ webpackContext.id = 5;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var equal_service_1 = __webpack_require__(1);
+var equal_service_1 = __webpack_require__(2);
 var equalSrv = null;
 describe('EqualService', function () {
     beforeAll(function () {
@@ -887,7 +926,7 @@ describe('EqualService', function () {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var parameter_service_1 = __webpack_require__(0);
+var parameter_service_1 = __webpack_require__(1);
 describe('Parameter', function () {
     describe('getDataType()', function () {
         it('should return the correct data type', function () {

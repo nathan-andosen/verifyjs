@@ -5,7 +5,10 @@
   <title>Dev playground</title>
   <script src="../dist/verify.min.js" type="text/javascript"></script>
   <script type="text/javascript">
+    window.verify = Thenja.verify;
     console.log(verify(10).equals(12).isValid());
+
+
 
     var myFunc = function() {
       return new Promise(function(resolve, reject){

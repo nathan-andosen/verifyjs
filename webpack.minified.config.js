@@ -12,6 +12,7 @@ module.exports = {
   output: {
     path: path.join(__dirname, "dist"),
     filename: "verify.min.js",
+    library: ["Thenja"],
     libraryTarget: 'umd'
   },
   resolve: {
